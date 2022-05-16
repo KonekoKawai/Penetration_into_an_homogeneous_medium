@@ -6,7 +6,6 @@
 #include <Windows.h>
 #include <SDL.h> // Отображение и графика
 
-
 #include "depth_calculation.h"
 #include "Texture.h"
 #include "motion_display.h"
@@ -22,7 +21,6 @@ const int SCREEN_HEIGHT_INFO = SCREEN_HEIGHT;
 
 const int HEIGHT_UDARNIK = SCREEN_HEIGHT_MOTION*2; // Высота ударника
 
-const int PIKSEL_IN_ON_M_MOTION = 180; // Пикселей в одном метре ДЛЯ экрана с движением ударника
 
 const int THICKHNESS_PIKSEL = 6; // Ширина точки в пикселях
 const int ARRAY_SIZE = 5; // Количество ударников для просмотра

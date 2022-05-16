@@ -153,6 +153,8 @@ int main(int argc ,  char* args[])
 					break;
 				case SDLK_1:
 					count = 0;
+
+
 					display(); // Отобразить рамки экранов 
 					udar[count].reset_udar(); // Обнулить данные ударника 
 					motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование
@@ -161,7 +163,7 @@ int main(int argc ,  char* args[])
 					motion_udar.display_motion_klin(&udar[count]); // ОТобразить начальное положение клина 
 
 					SDL_RenderSetViewport(gRenderer, &rect_info_PDSK); // Область для отображения Только область ударника и прочее
-					motion_udar.display_info_PDSK(); // Отобразить ПДСК в окне с информацией
+					motion_udar.display_info_PDSK(); // Отобразить ПДСК в окне с информацией	
 
 					SDL_RenderPresent(gRenderer); // Обновить экран
 					break;
@@ -221,7 +223,7 @@ int main(int argc ,  char* args[])
 
 					SDL_RenderPresent(gRenderer); // Обновить экран
 					break;
-				}
+				}			
 			}
 			if (e.type == SDL_QUIT)
 				quit = true;
@@ -238,9 +240,8 @@ int main(int argc ,  char* args[])
 			
 			while (true)
 			{			
-				
 				udar[count].set_current_depth_y(udar[count].get_current_depth_y() + udar[count].get_current_velocity_in_pixel());
-				udar[count].set_current_velocity_in_pixel(udar[count].velocity_and_depth() / PIKSEL_IN_ON_M_MOTION);
+				udar[count].set_current_velocity_in_pixel(udar[count].velocity_and_depth() / motion_udar.get_PIKSEL_IN_ON_M_MOTION());
 
 				if (udar[count].get_current_velocity_in_pixel() == 0)
 				{
@@ -252,7 +253,6 @@ int main(int argc ,  char* args[])
 				}
 				
 				SDL_RenderSetViewport(gRenderer ,  &rect_PDSK); // Область для отображения Только область ударника и прочее
-			
 				motion_udar.display_PDSK(); // Отобразить систему координат
 				motion_udar.display_motion_klin(&udar[count]); // Отобразить движение клина	
 
