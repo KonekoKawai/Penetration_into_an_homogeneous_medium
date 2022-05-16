@@ -109,7 +109,7 @@ int main(int argc ,  char* args[])
 	
 	//depth_calculation udar[ARRAY_SIZE] = {};
 	//while(enter(udar)); // Заполнение объекта данными 
-	//cout << udar[0].end_depth() << "м";
+	//cout << udar[0].get_end_depth() << "м";
 	
 	//while (enter(&udar));
 	int count = 0; // Значение для экрана по умолчанию / Объект в массиве по умолчанию 
@@ -134,6 +134,7 @@ int main(int argc ,  char* args[])
 	motion_udar.display_info_PDSK();
 	SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Область для отображения Только область ударника и прочее
 	
+	motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование 
 	motion_udar.display_motion_klin(&udar[count]);
 	SDL_RenderPresent(gRenderer);
 	while (!quit) // Цикл отображения на экране
@@ -154,6 +155,7 @@ int main(int argc ,  char* args[])
 					count = 0;
 					display(); // Отобразить рамки экранов 
 					udar[count].reset_udar(); // Обнулить данные ударника 
+					motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование
 					motion_udar.display_PDSK(); // Отобразить PDSK
 					SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Переключиться на экран с главной PDSK 
 					motion_udar.display_motion_klin(&udar[count]); // ОТобразить начальное положение клина 
@@ -167,6 +169,7 @@ int main(int argc ,  char* args[])
 					count = 1;
 					display(); // Отобразить рамки экранов 
 					udar[count].reset_udar(); // Обнулить данные ударника 
+					motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование
 					motion_udar.display_PDSK(); // Отобразить PDSK
 					SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Переключиться на экран с главной PDSK 
 					motion_udar.display_motion_klin(&udar[count]); // ОТобразить начальное положение клина 
@@ -180,6 +183,7 @@ int main(int argc ,  char* args[])
 					count = 2;
 					display(); // Отобразить рамки экранов 
 					udar[count].reset_udar(); // Обнулить данные ударника 
+					motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование
 					motion_udar.display_PDSK(); // Отобразить PDSK
 					SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Переключиться на экран с главной PDSK 
 					motion_udar.display_motion_klin(&udar[count]); // ОТобразить начальное положение клина 
@@ -193,6 +197,7 @@ int main(int argc ,  char* args[])
 					count = 3;
 					display(); // Отобразить рамки экранов 
 					udar[count].reset_udar(); // Обнулить данные ударника 
+					motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование
 					motion_udar.display_PDSK(); // Отобразить PDSK
 					SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Переключиться на экран с главной PDSK 
 					motion_udar.display_motion_klin(&udar[count]); // ОТобразить начальное положение клина 
@@ -205,7 +210,8 @@ int main(int argc ,  char* args[])
 				case SDLK_5:
 					count = 4;
 					display(); // Отобразить рамки экранов 
-					udar[count].reset_udar(); // Обнулить данные ударника 
+					udar[count].reset_udar(); // Обнулить данные ударника
+					motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование
 					motion_udar.display_PDSK(); // Отобразить PDSK
 					SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Переключиться на экран с главной PDSK 
 					motion_udar.display_motion_klin(&udar[count]); // ОТобразить начальное положение клина 
@@ -234,14 +240,14 @@ int main(int argc ,  char* args[])
 			{			
 				
 				udar[count].set_current_depth_y(udar[count].get_current_depth_y() + udar[count].get_current_velocity_in_pixel());
-				udar[count].set_current_velocity_in_pixel(udar[count].velocity_and_depth() / PIKSEL_IN_ON_M_MOTION);
+				udar[count].set_current_velocity_in_pixel(udar[count].velocity_and_depth() / motion_udar.get_PIKSEL_IN_ON_M_MOTION());
 
 				if (udar[count].get_current_velocity_in_pixel() == 0)
 				{
 					motion = false;
 					SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Область для отображения 
 					motion_udar.display_motion_klin(&udar[count]);
-					cout << endl << "Конечная глубина проникания ударника: " << udar[count].end_depth() << "м" << endl;
+					cout << endl << "Конечная глубина проникания ударника: " << udar[count].get_end_depth() << "м" << endl;
 					break;
 				}
 				

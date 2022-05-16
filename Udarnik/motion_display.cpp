@@ -8,6 +8,10 @@ motion_display::motion_display()
 	current_y = start_y;
 	current_point = { current_x - THICKHNESS_PIKSEL / 2  , current_y - THICKHNESS_PIKSEL / 2 ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
 	end_point = { current_x - THICKHNESS_PIKSEL / 2  , current_y - THICKHNESS_PIKSEL / 2 ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
+
+	PIKSEL_IN_ON_M_MOTION = 180;
+	PIKSEL_IN_ON_M_INFO_L = 100;
+	PIKSEL_IN_ON_M_INFO_V = 100;
 }
 
 motion_display::~motion_display()
@@ -76,7 +80,7 @@ void motion_display::display_motion_klin(depth_calculation* udar) // Метод для о
 
 	//  КОнечная точка 
 	SDL_SetRenderDrawColor(gRenderer ,  0 ,  140 ,  0 ,  0);  // цвет
-	end_point = { current_x - THICKHNESS_PIKSEL / 2  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->end_depth() * PIKSEL_IN_ON_M_MOTION) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };// Расположение
+	end_point = { current_x - THICKHNESS_PIKSEL / 2  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_end_depth() * PIKSEL_IN_ON_M_MOTION) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };// Расположение
 	SDL_RenderFillRect(gRenderer ,  &end_point);
 
 	current_y = SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_current_depth_y() * PIKSEL_IN_ON_M_MOTION);
@@ -97,6 +101,7 @@ void motion_display::display_motion_klin(depth_calculation* udar) // Метод для о
 
 }
 
+
 int motion_display::get_current_y()
 {
 	return current_y;
@@ -105,8 +110,8 @@ int motion_display::get_current_y()
 void motion_display::display_info_PDSK() // Отрисовка PDSK на окне с информацией 
 {
 	SDL_SetRenderDrawColor(gRenderer ,  0 , 0 ,  0 ,  0);
-	SDL_RenderDrawLine(gRenderer, WIDTH_INDENT, HEIGHT_OTSTUP, WIDTH_INDENT, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_OTSTUP); // Ось Y
-	SDL_RenderDrawLine(gRenderer, WIDTH_INDENT, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_OTSTUP, SCREEN_WIDTH_INFO - WIDTH_INDENT, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_OTSTUP); // Ось X
+	SDL_RenderDrawLine(gRenderer, WIDTH_INDENT, HEIGHT_INDENT, WIDTH_INDENT, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_INDENT); // Ось Y
+	SDL_RenderDrawLine(gRenderer, WIDTH_INDENT, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_INDENT, SCREEN_WIDTH_INFO - WIDTH_INDENT, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_INDENT); // Ось X
 
 	/// Отобразим черточки Обозначение расстояния 
 	int count = 0;
@@ -114,18 +119,18 @@ void motion_display::display_info_PDSK() // Отрисовка PDSK на окне с информацией
 	{
 
 		if (count % 4 == 0) // Каждые 0.25 Ставим большой прочерк
-			SDL_RenderDrawLine(gRenderer, i, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_OTSTUP - HEIGHT_OTSTUP / 2, i, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_OTSTUP + HEIGHT_OTSTUP / 2); // Каждые 0.25
+			SDL_RenderDrawLine(gRenderer, i, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_INDENT - HEIGHT_INDENT / 2, i, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_INDENT + HEIGHT_INDENT / 2); // Каждые 0.25
 		count++;
-		SDL_RenderDrawLine(gRenderer, i, SCREEN_HEIGHT_INFO/4*3 -  HEIGHT_OTSTUP - HEIGHT_OTSTUP/4, i, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_OTSTUP + HEIGHT_OTSTUP/4); // Каждые 0.25
+		SDL_RenderDrawLine(gRenderer, i, SCREEN_HEIGHT_INFO/4*3 -  HEIGHT_INDENT - HEIGHT_INDENT/4, i, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_INDENT + HEIGHT_INDENT/4); // Каждые 0.25
 	}
 
 	count = 0;
-	for (int i = SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_OTSTUP ; i > HEIGHT_OTSTUP; i -= PIKSEL_IN_ON_M_INFO_V / 4) // Черточки по линии Y вверх
+	for (int i = SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_INDENT ; i > HEIGHT_INDENT; i -= PIKSEL_IN_ON_M_INFO_V / 4) // Черточки по линии Y вверх
 	{
 		if (count % 4 == 0) // Каждые 0.25 Ставим большой прочерк
-			SDL_RenderDrawLine(gRenderer, WIDTH_INDENT + HEIGHT_OTSTUP / 2, i, WIDTH_INDENT - HEIGHT_OTSTUP / 2, i);
+			SDL_RenderDrawLine(gRenderer, WIDTH_INDENT + HEIGHT_INDENT / 2, i, WIDTH_INDENT - HEIGHT_INDENT / 2, i);
 		count++;
-		SDL_RenderDrawLine(gRenderer, WIDTH_INDENT + HEIGHT_OTSTUP/4, i, WIDTH_INDENT - HEIGHT_OTSTUP/4, i);
+		SDL_RenderDrawLine(gRenderer, WIDTH_INDENT + HEIGHT_INDENT/4, i, WIDTH_INDENT - HEIGHT_INDENT/4, i);
 	}
 
 }
@@ -134,22 +139,23 @@ void motion_display::display_info_PSDK_V_and_L(depth_calculation* udar) // Отрис
 {
 	SDL_SetRenderDrawColor(gRenderer, 0, 140, 0, 0); // Точка конца пути - цвет
 	//  КОнечная точка Расположение
-	end_point = { current_x - THICKHNESS_PIKSEL / 2  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->end_depth() * PIKSEL_IN_ON_M_MOTION) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
+	end_point = { current_x - THICKHNESS_PIKSEL / 2  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_end_depth() * PIKSEL_IN_ON_M_MOTION) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
 	SDL_RenderFillRect(gRenderer, &end_point);
 
 
 	// Начальная точка расположение
-	current_point = { WIDTH_INDENT+(int)(udar->get_current_depth_y() * PIKSEL_IN_ON_M_INFO_L)  ,SCREEN_HEIGHT_INFO/4*3 - HEIGHT_OTSTUP - (int)(udar->get_current_velocity() * PIKSEL_IN_ON_M_INFO_V) ,  4 ,  4};
+	current_point = { WIDTH_INDENT+(int)(udar->get_current_depth_y() * PIKSEL_IN_ON_M_INFO_L)  ,SCREEN_HEIGHT_INFO/4*3 - HEIGHT_INDENT - (int)(udar->get_current_velocity() * PIKSEL_IN_ON_M_INFO_V) ,  4 ,  4};
 	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0); // Точка начала - цвет
 	SDL_RenderFillRect(gRenderer, &current_point);
 }
+
 
 
 void motion_display::display_motion_point(depth_calculation* udar) // Метод для отображения движения точки
 {
 	SDL_SetRenderDrawColor(gRenderer ,  0 ,  140 ,  0 ,  0); // Точка конца пути - цвет
 	//  КОнечная точка Расположение
-	end_point = { current_x - THICKHNESS_PIKSEL / 2  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->end_depth() * PIKSEL_IN_ON_M_MOTION) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
+	end_point = { current_x - THICKHNESS_PIKSEL / 2  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_end_depth() * PIKSEL_IN_ON_M_MOTION) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
 	SDL_RenderFillRect(gRenderer ,  &end_point);
 
 
@@ -166,4 +172,16 @@ void motion_display::display_motion_point(depth_calculation* udar) // Метод для 
 	SDL_SetRenderDrawColor(gRenderer ,  0 ,  0 ,  0 ,  0);
 	//current_point = { current_x - THICKHNESS_PIKSEL / 2  , current_y - THICKHNESS_PIKSEL / 2 ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
 	SDL_RenderFillRect(gRenderer ,  &current_point);
+}
+
+int motion_display::get_PIKSEL_IN_ON_M_MOTION()
+{
+	return PIKSEL_IN_ON_M_MOTION;
+}
+
+void motion_display::scaling_PDSK(depth_calculation* udar) // Масштабирует для указанных данных клина
+{
+	PIKSEL_IN_ON_M_INFO_V = (SCREEN_HEIGHT_INFO/4*3-2*HEIGHT_INDENT) / (int)udar->get_start_velocity() - HEIGHT_INDENT/2;
+	PIKSEL_IN_ON_M_INFO_L = (SCREEN_WIDTH_INFO - 3*WIDTH_INDENT) / int(ceil( udar->get_end_depth()));
+	PIKSEL_IN_ON_M_MOTION = (SCREEN_HEIGHT / 4 * 3) / int(ceil(udar->get_end_depth()));
 }
