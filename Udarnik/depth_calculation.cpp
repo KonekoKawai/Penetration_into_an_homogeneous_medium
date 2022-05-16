@@ -13,6 +13,7 @@ depth_calculation::depth_calculation()
 	current_depth_y = 0;
 	finish_depth = 0;
 	current_velocity_in_pixel = 0;
+
 }
 
 depth_calculation::depth_calculation(double  mass ,  double  start_velocity ,  double  alpha_rad ,  double  density ,  double  tangent ,  double  dynamic_hardness)
@@ -27,6 +28,7 @@ depth_calculation::depth_calculation(double  mass ,  double  start_velocity ,  d
 	this->current_depth_y = 0;
 	current_velocity_in_pixel = 0;
 	this->finish_depth = 0;
+
 }
 
 
@@ -38,12 +40,12 @@ double depth_calculation::velocity_and_depth() // Расчет отношения текущей скоро
 	if ((-(A / B) + (A / B + pow(start_velocity ,  2)) * exp(-B * pow(current_depth_y ,  2))) <= 0.0001)
 	{
 		this->current_velocity = 0;
-		this->current_depth_y = end_depth();
+		this->current_depth_y = get_end_depth();
 	}
 	return current_velocity;
 }
 
-double depth_calculation::end_depth() // Расчет конечной глубины проникания
+double depth_calculation::get_end_depth() // Расчет конечной глубины проникания
 {
 	double  A = (2 * dynamic_hardness * tan(alpha_rad) + 2 * tangent) / mass;
 	double  B = (2 * pow(sin(alpha_rad) ,  2) * density * tan(alpha_rad)) / mass;
@@ -87,6 +89,7 @@ double depth_calculation::get_current_velocity() // Получить текушую скорость
 {
 	return current_velocity;
 }
+
 
 double depth_calculation::get_start_velocity() // Получить текушую скорость
 {

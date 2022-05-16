@@ -20,11 +20,9 @@ extern const int SCREEN_HEIGHT_INFO;
 
 // Отступы для экрана с информацией и графика с ней 
 const int WIDTH_INDENT = SCREEN_WIDTH / 50;
-const int HEIGHT_OTSTUP = SCREEN_HEIGHT / 30;
+const int HEIGHT_INDENT = SCREEN_HEIGHT / 30;
 
 extern const int PIKSEL_IN_ON_M_MOTION;
-extern const int PIKSEL_IN_ON_M_INFO_L;
-extern const int PIKSEL_IN_ON_M_INFO_V;
 
 
 extern const int THICKHNESS_PIKSEL; // Толщина точек и прочего на экране
@@ -50,6 +48,8 @@ public:
 	void display_motion_klin(depth_calculation* udar); // Отобразить движение клина
 	void display_info_PDSK(); // Отобразить в окне информации PDSK 
 	void display_info_PSDK_V_and_L(depth_calculation* udar); // Отобразить в окне информации Изменение 
+
+	void scaling_PDSK(depth_calculation *udar); // Изменяет масштаб PDSK 
 private:
 	int current_x;
 	int current_y;
@@ -57,6 +57,10 @@ private:
 	int start_y;
 	SDL_Rect current_point;
 	SDL_Rect end_point;
+
+	int PIKSEL_IN_ON_M_INFO_L; // Пикселей в одном метре  ДЛЯ экрана с информации о движении ударника
+	int PIKSEL_IN_ON_M_INFO_V; // Пикселей в одном метре  ДЛЯ экрана с информации о движении ударника
+
 };
 
 
