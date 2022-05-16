@@ -9,6 +9,7 @@ motion_display::motion_display()
 	current_point = { current_x - THICKHNESS_PIKSEL / 2  , current_y - THICKHNESS_PIKSEL / 2 ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
 	end_point = { current_x - THICKHNESS_PIKSEL / 2  , current_y - THICKHNESS_PIKSEL / 2 ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
 
+	PIKSEL_IN_ON_M_MOTION = 180;
 	PIKSEL_IN_ON_M_INFO_L = 100;
 	PIKSEL_IN_ON_M_INFO_V = 100;
 }
@@ -173,8 +174,14 @@ void motion_display::display_motion_point(depth_calculation* udar) // Метод для 
 	SDL_RenderFillRect(gRenderer ,  &current_point);
 }
 
+int motion_display::get_PIKSEL_IN_ON_M_MOTION()
+{
+	return PIKSEL_IN_ON_M_MOTION;
+}
+
 void motion_display::scaling_PDSK(depth_calculation* udar) // Масштабирует для указанных данных клина
 {
 	PIKSEL_IN_ON_M_INFO_V = (SCREEN_HEIGHT_INFO/4*3-2*HEIGHT_INDENT) / (int)udar->get_start_velocity() - HEIGHT_INDENT/2;
-	PIKSEL_IN_ON_M_INFO_L = (SCREEN_WIDTH_INFO - 3*WIDTH_INDENT) / ceil( udar->get_end_depth());
+	PIKSEL_IN_ON_M_INFO_L = (SCREEN_WIDTH_INFO - 3*WIDTH_INDENT) / int(ceil( udar->get_end_depth()));
+	PIKSEL_IN_ON_M_MOTION = (SCREEN_HEIGHT / 4 * 3) / int(ceil(udar->get_end_depth()));
 }
