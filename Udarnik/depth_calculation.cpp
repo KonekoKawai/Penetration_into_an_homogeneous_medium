@@ -1,5 +1,6 @@
 #include "depth_calculation.h"
 
+int depth_calculation::ARRAY_SIZE = 0;
 
 depth_calculation::depth_calculation()
 {
@@ -14,6 +15,8 @@ depth_calculation::depth_calculation()
 	finish_depth = 0;
 	current_velocity_in_pixel = 0;
 
+	ARRAY_SIZE++;
+	
 }
 
 depth_calculation::depth_calculation(double  mass ,  double  start_velocity ,  double  alpha_rad ,  double  density ,  double  tangent ,  double  dynamic_hardness)
@@ -29,6 +32,7 @@ depth_calculation::depth_calculation(double  mass ,  double  start_velocity ,  d
 	current_velocity_in_pixel = 0;
 	this->finish_depth = 0;
 
+	ARRAY_SIZE++;
 }
 
 
@@ -52,6 +56,12 @@ double depth_calculation::get_end_depth() // –асчет конечной глубины проникани€
 	this->finish_depth = sqrt(1 / B * log(1 + (B * pow(start_velocity ,  2)) / A));
 	return finish_depth;
 }
+
+unsigned int depth_calculation::get_ARRAY_SIZE()
+{
+	return ARRAY_SIZE;
+}
+
 
 void depth_calculation::reset_udar() // ”становить все значени€ в в начальные 
 {
