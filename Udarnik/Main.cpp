@@ -151,9 +151,10 @@ int main(int argc ,  char* args[])
 				case SDLK_w:
 					motion = true;
 					break;
-				case SDLK_1:
-					count = 0;
-
+				case SDLK_1: // Предыдущий клин
+					count--;
+					if (count < 0)
+						count = ARRAY_SIZE - 1;
 
 					display(); // Отобразить рамки экранов 
 					udar[count].reset_udar(); // Обнулить данные ударника 
@@ -167,8 +168,11 @@ int main(int argc ,  char* args[])
 
 					SDL_RenderPresent(gRenderer); // Обновить экран
 					break;
-				case SDLK_2:
-					count = 1;
+				case SDLK_2: // Следующий клин 
+					count++;
+					if (ARRAY_SIZE - count == 0)
+						count = 0;
+
 					display(); // Отобразить рамки экранов 
 					udar[count].reset_udar(); // Обнулить данные ударника 
 					motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование
@@ -181,36 +185,9 @@ int main(int argc ,  char* args[])
 
 					SDL_RenderPresent(gRenderer); // Обновить экран
 					break;
-				case SDLK_3:
-					count = 2;
-					display(); // Отобразить рамки экранов 
-					udar[count].reset_udar(); // Обнулить данные ударника 
-					motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование
-					motion_udar.display_PDSK(); // Отобразить PDSK
-					SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Переключиться на экран с главной PDSK 
-					motion_udar.display_motion_klin(&udar[count]); // ОТобразить начальное положение клина 
-
-					SDL_RenderSetViewport(gRenderer, &rect_info_PDSK); // Область для отображения Только область ударника и прочее
-					motion_udar.display_info_PDSK(); // Отобразить ПДСК в окне с информацией
-
-					SDL_RenderPresent(gRenderer); // Обновить экран
-					break;
-				case SDLK_4:
-					count = 3;
-					display(); // Отобразить рамки экранов 
-					udar[count].reset_udar(); // Обнулить данные ударника 
-					motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование
-					motion_udar.display_PDSK(); // Отобразить PDSK
-					SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Переключиться на экран с главной PDSK 
-					motion_udar.display_motion_klin(&udar[count]); // ОТобразить начальное положение клина 
-
-					SDL_RenderSetViewport(gRenderer, &rect_info_PDSK); // Область для отображения Только область ударника и прочее
-					motion_udar.display_info_PDSK(); // Отобразить ПДСК в окне с информацией
-
-					SDL_RenderPresent(gRenderer); // Обновить экран
-					break;
-				case SDLK_5:
-					count = 4;
+				
+				case SDLK_0: // Вернутся к начальному клину 
+					count = 0;
 					display(); // Отобразить рамки экранов 
 					udar[count].reset_udar(); // Обнулить данные ударника
 					motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование
