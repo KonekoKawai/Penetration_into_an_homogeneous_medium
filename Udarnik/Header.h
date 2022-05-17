@@ -25,7 +25,9 @@ const int HEIGHT_UDARNIK = SCREEN_HEIGHT_MOTION*2; // Высота ударника
 const int THICKHNESS_PIKSEL = 6; // Ширина точки в пикселях
 const int ARRAY_SIZE = 5; // Количество ударников для просмотра
 
-using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
 
 SDL_Window* gWindow = NULL; // Глобальное окно для всего
 SDL_Surface* gScreenSurface = NULL; // Глобальная поверхность для глобального окна 
