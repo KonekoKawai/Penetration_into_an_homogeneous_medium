@@ -6,7 +6,6 @@
 #include <Windows.h>
 #include <SDL.h> // Отображение и графика
 
-
 #include "depth_calculation.h"
 #include "Texture.h"
 #include "motion_display.h"

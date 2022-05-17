@@ -9,7 +9,7 @@ motion_display::motion_display()
 	current_point = { current_x - THICKHNESS_PIKSEL / 2  , current_y - THICKHNESS_PIKSEL / 2 ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
 	end_point = { current_x - THICKHNESS_PIKSEL / 2  , current_y - THICKHNESS_PIKSEL / 2 ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
 
-	PIKSEL_IN_ON_M_MOTION = 180;
+	PIKSEL_IN_ON_M_MOTION = 100;
 	PIKSEL_IN_ON_M_INFO_L = 100;
 	PIKSEL_IN_ON_M_INFO_V = 100;
 }
