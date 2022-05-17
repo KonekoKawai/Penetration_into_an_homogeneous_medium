@@ -11,6 +11,7 @@ public:
 
 	double velocity_and_depth(); // Расчет отношения текущей скорости к текущей глубине
 	double get_end_depth(); // Расчет конечной глубины 
+	unsigned int get_ARRAY_SIZE();
 	void reset_udar(); // Обнуление данных ударника
 	void set_values(double  mass ,  double  start_velocity ,  double  alpha_rad ,  double  density ,  double  tangent ,  double  dynamic_hardness); // Установка всех значений
 	void set_current_velocity_in_pixel(double current_velocity);  // Установка текущей скорости в пикселях
@@ -21,6 +22,8 @@ public:
 	double get_start_velocity(); // Получить стартовую скорость
 	double get_current_velocity(); // Получить текущую скорость
 	
+	
+	static int ARRAY_SIZE;
 private:
 	double mass; // Масса 
 	double start_velocity; // Начальная скорость
@@ -32,4 +35,6 @@ private:
 	double dynamic_hardness; // Динамическая твердость 
 	double current_depth_y; // Текущая глубина
 	double finish_depth; // Конечная глубина проникновения
+
+	
 };

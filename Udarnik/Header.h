@@ -23,7 +23,13 @@ const int HEIGHT_UDARNIK = SCREEN_HEIGHT_MOTION*2; // Высота ударника
 
 
 const int THICKHNESS_PIKSEL = 6; // Ширина точки в пикселях
+
+//#define Test
+
+
+#ifdef Test
 const int ARRAY_SIZE = 5; // Количество ударников для просмотра
+#endif
 
 using std::cout;
 using std::cin;
