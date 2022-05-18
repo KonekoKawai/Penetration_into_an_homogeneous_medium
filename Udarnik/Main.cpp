@@ -40,10 +40,13 @@ bool enter(depth_calculation *udar) // Функция ввода данных в
 	double density = -1; // Плотность
 	double tangent = -1; // Касательное сопротивление
 	double dynamic_hardness = -1; // Динамическая твердость 
+	double h0 = 1; // Высота ударной чатси
+	double h1 = 2; // Высота основания 
 	static int count = 0; // Номер элемента массива 
 	bool flag = true;
 	
 	system("cls");
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	while (true)
 	{
 		printf("Данные для %d клина\n", count + 1);
@@ -53,8 +56,6 @@ bool enter(depth_calculation *udar) // Функция ввода данных в
 		cin >> start_velocity;
 		cout << "Введите угол полураствора клина в градусах: ";
 		cin >> alpha_rad;
-		
-
 		cout << "Введите плотность преграды в кг/м^2: ";
 		cin >> density;
 		cout << "Введите касательное сопротивление преграды в H: ";
@@ -62,7 +63,13 @@ bool enter(depth_calculation *udar) // Функция ввода данных в
 		cout << "Введите динамическую твердость преграды в Па: ";
 		cin >> dynamic_hardness;
 
-		if (mass > 0 && start_velocity > 0 && alpha_rad > 0 && alpha_rad < 90 && density > 0 && tangent > 0 && dynamic_hardness > 0) // Если все значения верно занесены
+		cout << "Введите h0 в см (высота ударной части): ";
+		cin >> h0;
+
+		cout << "Введите h1 в см (высота основания): ";
+		cin >> h1;
+
+		if (mass > 0 && start_velocity > 0 && alpha_rad > 0 && alpha_rad < 90 && density > 0 && tangent > 0 && dynamic_hardness > 0 && h0 > 0 && h1 > 0) // Если все значения верно занесены
 		{
 			alpha_rad = alpha_rad * M_PI / 180;
 			break;
@@ -76,8 +83,8 @@ bool enter(depth_calculation *udar) // Функция ввода данных в
 			cout << "Не правильно введенны значения!" << endl;
 		}
 	}
-
-	udar[count].set_values(mass ,  start_velocity ,  alpha_rad ,  density ,  tangent ,  dynamic_hardness); // Присвоение полям объекта наших данных
+	udar[count].set_values(mass ,  start_velocity ,  alpha_rad ,  density ,  tangent ,  dynamic_hardness, h0, h1); // Присвоение полям объекта наших данных
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #ifdef Test
 	cout << endl << "Продолжить набор значений? Да - Enter ,  Нет - ESC" << endl;
@@ -129,11 +136,11 @@ int main(int argc ,  char* args[])
 
 ////////////////
 #ifdef Test
-	depth_calculation udar[ARRAY_SIZE] = { depth_calculation(100 , 3 ,  45 * M_PI / 180 , 180 , 800 , 110),
-										depth_calculation(150, 9, 10 * M_PI / 180, 380,400,410),
-										depth_calculation(300, 4, 15 * M_PI / 180, 880,100,10),
-										depth_calculation(200, 7, 65 * M_PI / 180, 70,600,90) ,
-										depth_calculation(600, 2, 35 * M_PI / 180, 380,1100,200)
+	depth_calculation udar[ARRAY_SIZE] = { depth_calculation(100 , 3 ,  45 * M_PI / 180 , 180 , 800 , 110, 1, 2),
+										depth_calculation(150, 9, 10 * M_PI / 180, 380,400,410,1 ,2 ),
+										depth_calculation(300, 4, 15 * M_PI / 180, 880,100,10, 1, 2),
+										depth_calculation(200, 7, 65 * M_PI / 180, 70,600,90,1,2) ,
+										depth_calculation(600, 2, 35 * M_PI / 180, 380,1100,200,1,2)
    };
 #endif
 
@@ -147,15 +154,18 @@ int main(int argc ,  char* args[])
 	bool motion = false;
 	SDL_Event e; // Отработка событий 
 	
-
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	motion_udar.display_PDSK();
 	SDL_RenderSetViewport(gRenderer, &rect_info_PDSK); // Область для отображения Только область ударника и прочее
 	motion_udar.display_info_PDSK();
 	SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Область для отображения Только область ударника и прочее
-	
 	motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование 
 	motion_udar.display_motion_klin(&udar[count]);
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	SDL_RenderPresent(gRenderer);
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	while (!quit) // Цикл отображения на экране
 	{
 		while (SDL_PollEvent(&e) != 0)
@@ -264,6 +274,7 @@ int main(int argc ,  char* args[])
 
 		
 	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	close();
 
 	SDL_Delay(63);

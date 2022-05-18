@@ -23,7 +23,7 @@ const int WIDTH_INDENT = SCREEN_WIDTH / 50;
 const int HEIGHT_INDENT = SCREEN_HEIGHT / 30;
 
 extern const int THICKHNESS_PIKSEL; // Толщина точек и прочего на экране
-extern const int HEIGHT_UDARNIK; 
+//extern const int udar->get_h0(); 
 
 extern SDL_Renderer* gRenderer; // Отображает состояние рендеринга Помогает рендерить текстуры на экран
 
@@ -48,12 +48,18 @@ public:
 	int get_PIKSEL_IN_ON_M_MOTION();
 	void scaling_PDSK(depth_calculation *udar); // Изменяет масштаб PDSK 
 private:
+	int right_h0_intersection_h1;
+	int left_h0_intersection_h1;
+
 	int current_x;
 	int current_y;
 	int start_x;
 	int start_y;
 	SDL_Rect current_point;
 	SDL_Rect end_point;
+
+	int h0_in_pixel;
+	int h1_in_pixel;
 
     int PIKSEL_IN_ON_M_MOTION; // Пикселей в одном метре ДЛЯ экрана с движением ударника
 	int PIKSEL_IN_ON_M_INFO_L; // Пикселей в одном метре  ДЛЯ экрана с информации о движении ударника

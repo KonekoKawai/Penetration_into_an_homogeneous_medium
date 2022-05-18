@@ -19,12 +19,10 @@ const int SCREEN_HEIGHT_MOTION = SCREEN_HEIGHT; // Высота экрана для отображения
 const int SCREEN_WIDTH_INFO = SCREEN_WIDTH / 4; 
 const int SCREEN_HEIGHT_INFO = SCREEN_HEIGHT;
 
-const int HEIGHT_UDARNIK = SCREEN_HEIGHT_MOTION*2; // Высота ударника
-
 
 const int THICKHNESS_PIKSEL = 6; // Ширина точки в пикселях
 
-//#define Test
+#define Test
 
 
 #ifdef Test
@@ -46,4 +44,4 @@ SDL_Rect rect_info_PDSK = { SCREEN_WIDTH / 4 * 3 , SCREEN_HEIGHT / 4 , SCREEN_WI
 // Прототипы функций 
 void init();  // Функция инициализация окна 
 void close();  // Инициализация выхода 
-bool enter(depth_calculation* udar);
+bool enter(depth_calculation* udar); // Функция ввода параметров

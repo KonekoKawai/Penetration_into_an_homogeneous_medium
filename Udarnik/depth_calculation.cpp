@@ -15,11 +15,14 @@ depth_calculation::depth_calculation()
 	finish_depth = 0;
 	current_velocity_in_pixel = 0;
 
+	h0 = 1;
+	h1 = 2;
+	h = h0 + h1;
 	ARRAY_SIZE++;
 	
 }
 
-depth_calculation::depth_calculation(double  mass ,  double  start_velocity ,  double  alpha_rad ,  double  density ,  double  tangent ,  double  dynamic_hardness)
+depth_calculation::depth_calculation(double  mass ,  double  start_velocity ,  double  alpha_rad ,  double  density ,  double  tangent ,  double  dynamic_hardness, double h0, double h1)
 {
 	this->mass = mass;
 	this->start_velocity = start_velocity;
@@ -27,10 +30,14 @@ depth_calculation::depth_calculation(double  mass ,  double  start_velocity ,  d
 	this->density = density;
 	this->tangent = tangent;
 	this->dynamic_hardness = dynamic_hardness;
+	this->h1 = h1;
+	this->h0 = h0;
+	h = h1 + h0;
 	this->current_velocity = 0;
 	this->current_depth_y = 0;
 	current_velocity_in_pixel = 0;
 	this->finish_depth = 0;
+
 
 	ARRAY_SIZE++;
 }
@@ -62,6 +69,16 @@ unsigned int depth_calculation::get_ARRAY_SIZE()
 	return ARRAY_SIZE;
 }
 
+double depth_calculation::get_h0() // Ударная часть 
+{
+	return h0;
+}
+
+double depth_calculation::get_h1() // Основная часть
+{
+	return h1;
+}
+
 
 void depth_calculation::reset_udar() // Установить все значения в в начальные 
 {
@@ -70,7 +87,7 @@ void depth_calculation::reset_udar() // Установить все значения в в начальные
 	this->finish_depth = 0;
 }
 
-void depth_calculation::set_values(double mass ,  double start_velocity ,  double alpha_rad ,  double density ,  double tangent ,  double dynamic_hardness) // Геттер на ввод данных
+void depth_calculation::set_values(double mass ,  double start_velocity ,  double alpha_rad ,  double density ,  double tangent ,  double dynamic_hardness, double h0, double h1) // Геттер на ввод данных
 {
 	this->mass = mass;
 	this->start_velocity = start_velocity;

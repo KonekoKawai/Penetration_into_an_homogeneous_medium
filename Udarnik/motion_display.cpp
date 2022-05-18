@@ -1,5 +1,7 @@
 #include "motion_display.h"
 
+int const HEIGHT_UDARNIK = SCREEN_HEIGHT_MOTION * 2;
+
 motion_display::motion_display()
 {
 	start_x = SCREEN_WIDTH_MOTION/2;
@@ -12,6 +14,12 @@ motion_display::motion_display()
 	PIKSEL_IN_ON_M_MOTION = 100;
 	PIKSEL_IN_ON_M_INFO_L = 100;
 	PIKSEL_IN_ON_M_INFO_V = 100;
+
+	h0_in_pixel = 100;
+	h1_in_pixel = 100;
+
+	left_h0_intersection_h1 = 100;
+	right_h0_intersection_h1 = 100;
 }
 
 motion_display::~motion_display()
@@ -26,6 +34,8 @@ void motion_display::display_PDSK() // Отображение ПДСК на главном экране
 	SDL_RenderDrawLine(gRenderer ,  SCREEN_WIDTH_MOTION/2 ,  0 ,  SCREEN_WIDTH_MOTION / 2 ,  SCREEN_HEIGHT); // Ось Y
 	SDL_RenderDrawLine(gRenderer ,  0 ,  SCREEN_HEIGHT / 4 ,  SCREEN_WIDTH_MOTION ,  SCREEN_HEIGHT / 4); // Ось X
 	int count = 0;
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////// X
 	for (int i = SCREEN_WIDTH_MOTION/2; i < SCREEN_WIDTH_MOTION; i += PIKSEL_IN_ON_M_MOTION/4) // Черточки по линии X -> PIKSEL_IN_ON_M_MOTION/4 т.к Делим на 4 один метр
 	{
 	
@@ -44,6 +54,7 @@ void motion_display::display_PDSK() // Отображение ПДСК на главном экране
 		SDL_RenderDrawLine(gRenderer ,  i  ,  (SCREEN_HEIGHT / 4) + (SCREEN_HEIGHT_MOTION / 100) ,  i  ,  (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 100)); // Каждые 0.25
 
 	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////// Y
 	count = 0;
 	for (int i = SCREEN_HEIGHT_MOTION/4; i > 0; i -= PIKSEL_IN_ON_M_MOTION / 4) // Черточки по линии Y вверх
@@ -66,39 +77,68 @@ void motion_display::display_PDSK() // Отображение ПДСК на главном экране
 
 void motion_display::display_motion_klin(depth_calculation* udar) // Метод для отображения движения клина
 {
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Удаляем предыдующие линии 
 	SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255); // Образующуие клина для удаления - цвет
+
+	// ОСНОВНАЯ часть ударника
+	SDL_RenderDrawLine(gRenderer, right_h0_intersection_h1, current_y - h0_in_pixel, right_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Правая основная часть ударника 
+	SDL_RenderDrawLine(gRenderer, left_h0_intersection_h1, current_y - h0_in_pixel, left_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Левая основная часть ударника 
+	SDL_RenderDrawLine(gRenderer, right_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel, left_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Верхняя часть ударника
+
+
+	// ОБРАЗУЮЩИЕ 
 	//Удаляем 3 линии Которые рисуем далее // По сути первый вызов ничего не удаляет
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y - 1, (int)(SCREEN_WIDTH_MOTION / 2 + HEIGHT_UDARNIK / tan((M_PI / 2) - udar->get_current_alpha_rad())), current_y -1 - HEIGHT_UDARNIK); // Правая образующая 
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y, (int)(SCREEN_WIDTH_MOTION / 2 + HEIGHT_UDARNIK / tan((M_PI / 2) - udar->get_current_alpha_rad())), current_y - HEIGHT_UDARNIK); // Правая образующая 
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1, (int)(SCREEN_WIDTH_MOTION / 2 + HEIGHT_UDARNIK / tan((M_PI / 2) - udar->get_current_alpha_rad())), current_y + 1 - HEIGHT_UDARNIK); // Правая образующая 
+	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y - 1, right_h0_intersection_h1, current_y -1 - h0_in_pixel); // Правая образующая 
+	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y, right_h0_intersection_h1, current_y - h0_in_pixel); // Правая образующая 
+	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1, right_h0_intersection_h1, current_y + 1 - h0_in_pixel); // Правая образующая 
 
 	//Удаляем 3 линии Которые рисуем далее // По сути первый вызов ничего не удаляет
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y -1 , (int)(SCREEN_WIDTH_MOTION / 2 - HEIGHT_UDARNIK / tan((M_PI / 2) - udar->get_current_alpha_rad())), current_y -1 - HEIGHT_UDARNIK); // Левая образующая 
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y, (int)(SCREEN_WIDTH_MOTION / 2 - HEIGHT_UDARNIK / tan((M_PI / 2) - udar->get_current_alpha_rad())), current_y - HEIGHT_UDARNIK); // Левая образующая 
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1 , (int)(SCREEN_WIDTH_MOTION / 2 - HEIGHT_UDARNIK / tan((M_PI / 2) - udar->get_current_alpha_rad())), current_y + 1 - HEIGHT_UDARNIK); // Левая образующая 
+	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y -1 , left_h0_intersection_h1, current_y -1 - h0_in_pixel); // Левая образующая 
+	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y, left_h0_intersection_h1, current_y - h0_in_pixel); // Левая образующая 
+	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1 , left_h0_intersection_h1, current_y + 1 - h0_in_pixel); // Левая образующая 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 	//  КОнечная точка 
 	SDL_SetRenderDrawColor(gRenderer ,  0 ,  140 ,  0 ,  0);  // цвет
 	end_point = { current_x - THICKHNESS_PIKSEL / 2  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_end_depth() * PIKSEL_IN_ON_M_MOTION) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };// Расположение
 	SDL_RenderFillRect(gRenderer ,  &end_point);
-
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+	// Расчет координат
 	current_y = SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_current_depth_y() * PIKSEL_IN_ON_M_MOTION);
-	SDL_SetRenderDrawColor(gRenderer ,  0 ,  0 ,  0 ,  0); // Образующуие клина - цвет
+	h0_in_pixel = (udar->get_h0() *udar->get_end_depth() * PIKSEL_IN_ON_M_MOTION / 10);
+	h1_in_pixel = (udar->get_h1() * udar->get_end_depth() * PIKSEL_IN_ON_M_MOTION / 10);
+	right_h0_intersection_h1 = (int)(SCREEN_WIDTH_MOTION / 2 + h0_in_pixel / tan((M_PI / 2) - udar->get_current_alpha_rad()));
+	left_h0_intersection_h1 = (int)(SCREEN_WIDTH_MOTION / 2 - h0_in_pixel / tan((M_PI / 2) - udar->get_current_alpha_rad()));
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Отрисовываем ударник
+	SDL_SetRenderDrawColor(gRenderer ,  0 ,  0 ,  0 ,  0); //клин - цвет
+
+	// ОСНОВНАЯ часть ударника
+	SDL_RenderDrawLine(gRenderer, right_h0_intersection_h1, current_y - h0_in_pixel, right_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Правая основная часть ударника 
+	SDL_RenderDrawLine(gRenderer, left_h0_intersection_h1, current_y - h0_in_pixel, left_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Левая основная часть ударника 
+	SDL_RenderDrawLine(gRenderer, right_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel, left_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Верхняя часть ударника
+	// ОБРАЗУЮЩИЕ 
 	// Рисуем 3 линии Чтобы границы были более толстыми 
-	SDL_RenderDrawLine(gRenderer ,  SCREEN_WIDTH_MOTION / 2 ,   current_y -1,  (int)(SCREEN_WIDTH_MOTION / 2 + HEIGHT_UDARNIK/tan((M_PI/2)-udar->get_current_alpha_rad())) ,  current_y -1  - HEIGHT_UDARNIK); // Правая образующая 
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y, (int)(SCREEN_WIDTH_MOTION / 2 + HEIGHT_UDARNIK / tan((M_PI / 2) - udar->get_current_alpha_rad())), current_y - HEIGHT_UDARNIK); // Правая образующая 
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1, (int)(SCREEN_WIDTH_MOTION / 2 + HEIGHT_UDARNIK / tan((M_PI / 2) - udar->get_current_alpha_rad())), current_y +1 - HEIGHT_UDARNIK); // Правая образующая 
+	SDL_RenderDrawLine(gRenderer ,  SCREEN_WIDTH_MOTION / 2 ,   current_y -1, right_h0_intersection_h1,  current_y -1  - h0_in_pixel); // Правая образующая 
+	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y, right_h0_intersection_h1, current_y - h0_in_pixel); // Правая образующая 
+	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1, right_h0_intersection_h1, current_y +1 - h0_in_pixel); // Правая образующая 
 
 	// Рисуем 3 линии Чтобы границы были более толстыми 
-	SDL_RenderDrawLine(gRenderer ,  SCREEN_WIDTH_MOTION / 2 ,   current_y -1 ,  (int)(SCREEN_WIDTH_MOTION / 2 - HEIGHT_UDARNIK / tan((M_PI / 2) - udar->get_current_alpha_rad())) ,    current_y -1 - HEIGHT_UDARNIK); // Левая образующая 
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y, (int)(SCREEN_WIDTH_MOTION / 2 - HEIGHT_UDARNIK / tan((M_PI / 2) - udar->get_current_alpha_rad())), current_y - HEIGHT_UDARNIK); // Левая образующая 
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1, (int)(SCREEN_WIDTH_MOTION / 2 - HEIGHT_UDARNIK / tan((M_PI / 2) - udar->get_current_alpha_rad())), current_y + 1- HEIGHT_UDARNIK); // Левая образующая 
-
+	SDL_RenderDrawLine(gRenderer ,  SCREEN_WIDTH_MOTION / 2 ,   current_y -1 ,  left_h0_intersection_h1 ,    current_y -1 - h0_in_pixel); // Левая образующая 
+	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y, left_h0_intersection_h1, current_y - h0_in_pixel); // Левая образующая 
+	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1, left_h0_intersection_h1, current_y + 1- h0_in_pixel); // Левая образующая 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	SDL_SetRenderDrawColor(gRenderer ,  0 ,  0 ,  0 ,  0);
-	SDL_RenderDrawRect(gRenderer ,  &rect_PDSK); // Подрисовываем таблицу
-
+	SDL_RenderDrawRect(gRenderer ,  &rect_PDSK); // Подрисовываем рамки
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 
@@ -137,12 +177,13 @@ void motion_display::display_info_PDSK() // Отрисовка PDSK на окне с информацией
 
 void motion_display::display_info_PSDK_V_and_L(depth_calculation* udar) // Отрисовка зависимости в PDSK на окне с информацеий 
 {
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	SDL_SetRenderDrawColor(gRenderer, 0, 140, 0, 0); // Точка конца пути - цвет
 	//  КОнечная точка Расположение
 	end_point = { current_x - THICKHNESS_PIKSEL / 2  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_end_depth() * PIKSEL_IN_ON_M_MOTION) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
 	SDL_RenderFillRect(gRenderer, &end_point);
 
-
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Начальная точка расположение
 	current_point = { WIDTH_INDENT+(int)(udar->get_current_depth_y() * PIKSEL_IN_ON_M_INFO_L)  ,SCREEN_HEIGHT_INFO/4*3 - HEIGHT_INDENT - (int)(udar->get_current_velocity() * PIKSEL_IN_ON_M_INFO_V) ,  4 ,  4};
 	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0); // Точка начала - цвет
@@ -158,14 +199,14 @@ void motion_display::display_motion_point(depth_calculation* udar) // Метод для 
 	end_point = { current_x - THICKHNESS_PIKSEL / 2  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_end_depth() * PIKSEL_IN_ON_M_MOTION) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
 	SDL_RenderFillRect(gRenderer ,  &end_point);
 
-
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Измненеие текущего Y 
 	current_y = SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_current_depth_y() * PIKSEL_IN_ON_M_MOTION);
 	// Измнение точки 
 	current_point = { current_x - THICKHNESS_PIKSEL / 2  , current_y - THICKHNESS_PIKSEL / 2 ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
 	SDL_SetRenderDrawColor(gRenderer ,  255 ,  0 ,  0 ,  0); // Точка начала - цвет
 	SDL_RenderFillRect(gRenderer ,  &current_point);
-
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	SDL_RenderPresent(gRenderer);
 
 	// Появление за точкой Полосы  

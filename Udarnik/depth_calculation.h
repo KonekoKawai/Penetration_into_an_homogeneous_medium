@@ -7,13 +7,13 @@ class depth_calculation
 {
 public:
 	depth_calculation();
-	depth_calculation(double  mass ,  double  start_velocity ,  double  alpha_rad ,  double  density ,  double  tangent ,  double  dynamic_hardness);
+	depth_calculation(double  mass ,  double  start_velocity ,  double  alpha_rad ,  double  density ,  double  tangent ,  double  dynamic_hardness, double h0, double h1);
 
 	double velocity_and_depth(); // Расчет отношения текущей скорости к текущей глубине
 	double get_end_depth(); // Расчет конечной глубины 
 	unsigned int get_ARRAY_SIZE();
 	void reset_udar(); // Обнуление данных ударника
-	void set_values(double  mass ,  double  start_velocity ,  double  alpha_rad ,  double  density ,  double  tangent ,  double  dynamic_hardness); // Установка всех значений
+	void set_values(double  mass ,  double  start_velocity ,  double  alpha_rad ,  double  density ,  double  tangent ,  double  dynamic_hardness, double h0, double h1); // Установка всех значений
 	void set_current_velocity_in_pixel(double current_velocity);  // Установка текущей скорости в пикселях
 	void set_current_depth_y(double current_depth_y);  // Установка текущей глубины
 	double get_current_velocity_in_pixel();  // Запрос текущей скорости в ПИКСЕЛЯХ
@@ -21,7 +21,8 @@ public:
 	double get_current_alpha_rad(); // Получить текущий угол полураствора
 	double get_start_velocity(); // Получить стартовую скорость
 	double get_current_velocity(); // Получить текущую скорость
-	
+	double get_h0(); // Вывести h0
+	double get_h1(); // Вывести h1
 	
 	static int ARRAY_SIZE;
 private:
@@ -36,5 +37,7 @@ private:
 	double current_depth_y; // Текущая глубина
 	double finish_depth; // Конечная глубина проникновения
 
-	
+	double h0; // высота ударной части
+	double h1; // Высота основной части 
+	double h; // Общая высота ударника
 };
