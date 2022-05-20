@@ -3,18 +3,25 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 #include <string>
+#include <vector>
 
 using std::string;
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
+extern const int FONT_SIZE;
+
+extern TTF_Font* gFont;
 
 extern SDL_Window* gWindow; // Глобальное окно для всего
 extern SDL_Surface* gScreenSurface; // Глобальная поверхность для глобального окна 
 extern SDL_Renderer* gRenderer; // Отображает состояние рендеринга Помогает рендерить текстуры на экран
 
+
+extern SDL_Rect rect_info_Num;
 
 enum Sprite_Frame_Enum
 {
@@ -28,14 +35,19 @@ public:
     Work_With_Texture();
     ~Work_With_Texture();
 
+   
+
     void loadTexture(string path);
     void loadTexture(string path ,  int R ,  int G ,  int B);
 
+    void setFontOnSurface(string str);
+    void setFontOnSurface(const Uint16* str, unsigned char font_size);
     void setTexture(string path); // Загрузка ОДНОЙ текстуры без прозрачности ЗАДНЕЙ ЧАСТИ ТЕКСТУРЫ
     void setTexture(string path ,  int R ,  int G ,  int B); // Загрузка ОДНОЙ текстуры с установкой прозрачносии ЗАДНЕЙ ЧАСТИ ТЕКСТУРЫ
     void setTexture(string path ,  int width_Smash ,  int height_Smash); // Загрузка НЕСКОЛЬКИХ текстур из одной / разбиения поверхности на частицы БЕЗ ПРОЗРАЧНОСТИ ЗАДНЕЙ ЧАСТИ ТЕКСТУРЫ
     void setTexture(string path ,  int width_Smash ,  int height_Smash ,  int R ,  int G ,  int B); // Загрузка НЕСКОЛЬКИХ текстур из одной / разбиения поверхности на частицы ПРОЗРАЧНОСТЬ ЗАДНЕЙ ЧАСТИ ТЕКСТУРЫ
 
+    void TransferToRenderFont(int x, int y);
     void TransferToRender(int x ,  int y); // Отображение ОДНОЙ текстуры на рендер 
     void TransferArrayToRender(int x ,  int y ,  int frame); // Отображение из НЕСКОЛЬКИХ текстур ОПРЕДЕЛЕННОГО ФРЕЙМА на рендер 
     
@@ -63,4 +75,7 @@ private:
 
     int width_Smash;
     int height_Smash;
+
+    string textSTR; // Текст объекта в char
+    Uint16* textUNICODE; // Текст объекта в UNICODE
 };

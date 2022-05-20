@@ -5,6 +5,7 @@
 #include <conio.h>
 #include <Windows.h>
 #include <SDL.h> // Отображение и графика
+#include <SDL_ttf.h> // Шритфы
 
 #include "depth_calculation.h"
 #include "Texture.h"
@@ -16,9 +17,8 @@ const int SCREEN_HEIGHT = 900; // Высота экрана
 const int SCREEN_WIDTH_MOTION = SCREEN_WIDTH/4*3; // Ширина экрана для отображения ударника
 const int SCREEN_HEIGHT_MOTION = SCREEN_HEIGHT; // Высота экрана для отображения ударника
 
-const int SCREEN_WIDTH_INFO = SCREEN_WIDTH / 4; 
+const int SCREEN_WIDTH_INFO = SCREEN_WIDTH / 4;  
 const int SCREEN_HEIGHT_INFO = SCREEN_HEIGHT;
-
 
 const int THICKHNESS_PIKSEL = 6; // Ширина точки в пикселях
 
@@ -32,6 +32,10 @@ const int ARRAY_SIZE = 5; // Количество ударников для просмотра
 using std::cout;
 using std::cin;
 using std::endl;
+
+const int NUMB_TEXT = 4;
+const int FONT_SIZE = 14;// Размер шрифта
+TTF_Font* gFont = NULL; // Загрузка шрифта
 
 SDL_Window* gWindow = NULL; // Глобальное окно для всего
 SDL_Surface* gScreenSurface = NULL; // Глобальная поверхность для глобального окна 

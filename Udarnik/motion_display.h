@@ -23,7 +23,6 @@ const int WIDTH_INDENT = SCREEN_WIDTH / 50;
 const int HEIGHT_INDENT = SCREEN_HEIGHT / 30;
 
 extern const int THICKHNESS_PIKSEL; // Толщина точек и прочего на экране
-//extern const int udar->get_h0(); 
 
 extern SDL_Renderer* gRenderer; // Отображает состояние рендеринга Помогает рендерить текстуры на экран
 

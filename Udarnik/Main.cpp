@@ -1,9 +1,10 @@
 ﻿#include "Header.h"
 
 
-void init() // Функция инициализация окна 
+void init() // Функция инициализация окна и библиотек
 {
 	SDL_Init(SDL_INIT_EVERYTHING); // Инициализация библиотеки SDL Со всеми подсистемами 
+	TTF_Init();
 	gWindow = SDL_CreateWindow("Wedge penetration v0.3" ,  20 ,  50 ,  SCREEN_WIDTH ,  SCREEN_HEIGHT ,  SDL_WINDOW_SHOWN); // Присвоение окна
 	gScreenSurface = SDL_GetWindowSurface(gWindow); // Получаем поверхность нашего окна 
 	gRenderer = SDL_CreateRenderer(gWindow ,  -1 ,  SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); // Получаем рендер для нашего окна
@@ -19,7 +20,7 @@ void display()
 	SDL_RenderDrawRect(gRenderer ,  &rect_PDSK);
 	SDL_RenderDrawRect(gRenderer ,  &rect_info_PDSK);
 	SDL_RenderDrawRect(gRenderer ,  &rect_info_Num);
-	SDL_RenderPresent(gRenderer);
+	
 }
 
 void close() // Функция выхода 
@@ -29,6 +30,7 @@ void close() // Функция выхода
 	SDL_DestroyRenderer(gRenderer);
 	gWindow = NULL;
 	gScreenSurface = NULL;
+	TTF_Quit();
 	SDL_Quit();
 }
 
@@ -40,8 +42,10 @@ bool enter(depth_calculation *udar) // Функция ввода данных в
 	double density = -1; // Плотность
 	double tangent = -1; // Касательное сопротивление
 	double dynamic_hardness = -1; // Динамическая твердость 
-	double h0 = 1; // Высота ударной чатси
-	double h1 = 2; // Высота основания 
+	double h0 = -1; // Высота ударной чатси
+	double h1 = -1; // Высота основания 
+	double phi0 = 90; // Начальный угол проникновения
+
 	static int count = 0; // Номер элемента массива 
 	bool flag = true;
 	
@@ -65,18 +69,21 @@ bool enter(depth_calculation *udar) // Функция ввода данных в
 
 		cout << "Введите h0 в см (высота ударной части): ";
 		cin >> h0;
-
 		cout << "Введите h1 в см (высота основания): ";
 		cin >> h1;
+		cout << "Введите угол вхождения phi0 в градусах: ";
+		cin >> phi0;
 
-		if (mass > 0 && start_velocity > 0 && alpha_rad > 0 && alpha_rad < 90 && density > 0 && tangent > 0 && dynamic_hardness > 0 && h0 > 0 && h1 > 0) // Если все значения верно занесены
+
+		if (mass > 0 && start_velocity > 0 && alpha_rad > 0 && alpha_rad < 90 && density > 0 && tangent > 0 && dynamic_hardness > 0 && h0 > 0 && h1 > 0 && phi0 >- 90 && phi0 < 90) // Если все значения верно занесены
 		{
+			phi0 = phi0 * M_PI / 180;
 			alpha_rad = alpha_rad * M_PI / 180;
 			break;
 		}
 		else // Если в буфер попало не нужное нам значение или отрицательное значение
 		{
-			mass = -1 ,  start_velocity = -1 ,  alpha_rad = -1 ,  density = -1 ,  tangent = -1 ,  dynamic_hardness = -1;
+			mass = -1, start_velocity = -1, alpha_rad = -1, density = -1, tangent = -1, dynamic_hardness = -1, h0 = -1, h1 = -1, phi0 = 90;
 			cin.clear(); // Отчистка 
 			cin.ignore(1024 ,  '\n'); // Отчистка потока 
 			system("cls");
@@ -116,7 +123,8 @@ int main(int argc ,  char* args[])
 
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	
+
+
 #ifndef Test
 	int ARRAY_SIZE;
 	do
@@ -147,6 +155,7 @@ int main(int argc ,  char* args[])
 	init();
 	display();
 
+
 	int count = 0; // Значение для экрана по умолчанию / Объект в массиве по умолчанию 
 
 	motion_display motion_udar;
@@ -161,6 +170,18 @@ int main(int argc ,  char* args[])
 	SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Область для отображения Только область ударника и прочее
 	motion_udar.scaling_PDSK(&udar[count]); // Выполняем масштбаирование 
 	motion_udar.display_motion_klin(&udar[count]);
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Work_With_Texture info_Num_Text[NUMB_TEXT];
+	info_Num_Text[0].setFontOnSurface("Начальная скорость: " + std::to_string(udar[count].get_start_velocity()));
+	info_Num_Text[1].setFontOnSurface("Конечная глубина: " + std::to_string(udar[count].get_end_depth()));
+	info_Num_Text[3].setFontOnSurface("Текущая скорость: " + std::to_string(udar[count].get_current_velocity()));
+	info_Num_Text[2].setFontOnSurface("Текущая глубина: " + std::to_string(udar[count].get_current_depth_y()));
+
+	SDL_RenderSetViewport(gRenderer, &rect_info_Num);
+	for(int i = 0; i < NUMB_TEXT; i++)
+	info_Num_Text[i].TransferToRenderFont(10, 2 * i*FONT_SIZE);
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	SDL_RenderPresent(gRenderer);
@@ -195,6 +216,15 @@ int main(int argc ,  char* args[])
 					SDL_RenderSetViewport(gRenderer, &rect_info_PDSK); // Область для отображения Только область ударника и прочее
 					motion_udar.display_info_PDSK(); // Отобразить ПДСК в окне с информацией	
 
+					// Текст в панели с информацией 
+					info_Num_Text[0].setFontOnSurface("Начальная скорость: " + std::to_string(udar[count].get_start_velocity()));
+					info_Num_Text[1].setFontOnSurface("Конечная глубина: " + std::to_string(udar[count].get_end_depth()));
+					info_Num_Text[3].setFontOnSurface("Текущая скорость: " + std::to_string(udar[count].get_current_velocity()));
+					info_Num_Text[2].setFontOnSurface("Текущая глубина: " + std::to_string(udar[count].get_current_depth_y()));
+					SDL_RenderSetViewport(gRenderer, &rect_info_Num); // Область для отображения текста
+					for (int i = 0; i < NUMB_TEXT; i++)
+						info_Num_Text[i].TransferToRenderFont(10, 2 * i * FONT_SIZE);
+
 					SDL_RenderPresent(gRenderer); // Обновить экран
 					break;
 				case SDLK_2: // Следующий клин 
@@ -212,6 +242,15 @@ int main(int argc ,  char* args[])
 					SDL_RenderSetViewport(gRenderer, &rect_info_PDSK); // Область для отображения Только область ударника и прочее
 					motion_udar.display_info_PDSK(); // Отобразить ПДСК в окне с информацией
 
+					// Текст в панели с информацией 
+					info_Num_Text[0].setFontOnSurface("Начальная скорость: " + std::to_string(udar[count].get_start_velocity()));
+					info_Num_Text[1].setFontOnSurface("Конечная глубина: " + std::to_string(udar[count].get_end_depth()));
+					info_Num_Text[3].setFontOnSurface("Текущая скорость: " + std::to_string(udar[count].get_current_velocity()));
+					info_Num_Text[2].setFontOnSurface("Текущая глубина: " + std::to_string(udar[count].get_current_depth_y()));
+					SDL_RenderSetViewport(gRenderer, &rect_info_Num); // Область для отображения текста
+					for (int i = 0; i < NUMB_TEXT; i++)
+						info_Num_Text[i].TransferToRenderFont(10, 2 * i * FONT_SIZE);
+
 					SDL_RenderPresent(gRenderer); // Обновить экран
 					break;
 				
@@ -226,6 +265,15 @@ int main(int argc ,  char* args[])
 
 					SDL_RenderSetViewport(gRenderer, &rect_info_PDSK); // Область для отображения Только область ударника и прочее
 					motion_udar.display_info_PDSK(); // Отобразить ПДСК в окне с информацией
+
+					// Текст в панели с информацией 
+					info_Num_Text[0].setFontOnSurface("Начальная скорость: " + std::to_string(udar[count].get_start_velocity()));
+					info_Num_Text[1].setFontOnSurface("Конечная глубина: " + std::to_string(udar[count].get_end_depth()));
+					info_Num_Text[3].setFontOnSurface("Текущая скорость: " + std::to_string(udar[count].get_current_velocity()));
+					info_Num_Text[2].setFontOnSurface("Текущая глубина: " + std::to_string(udar[count].get_current_depth_y()));
+					SDL_RenderSetViewport(gRenderer, &rect_info_Num); // Область для отображения текста
+					for (int i = 0; i < NUMB_TEXT; i++)
+						info_Num_Text[i].TransferToRenderFont(10, 2 * i * FONT_SIZE);
 
 					SDL_RenderPresent(gRenderer); // Обновить экран
 					break;
@@ -246,17 +294,18 @@ int main(int argc ,  char* args[])
 			
 			while (true)
 			{			
+				display();
 				udar[count].set_current_depth_y(udar[count].get_current_depth_y() + udar[count].get_current_velocity_in_pixel());
 				udar[count].set_current_velocity_in_pixel(udar[count].velocity_and_depth() / motion_udar.get_PIKSEL_IN_ON_M_MOTION());
 
-				if (udar[count].get_current_velocity_in_pixel() == 0)
-				{
-					motion = false;
-					SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Область для отображения 
-					motion_udar.display_motion_klin(&udar[count]);
-					cout << endl << "Конечная глубина проникания ударника: " << udar[count].get_end_depth() << "м" << endl;
-					break;
-				}
+				// Текст в панели с информацией 
+				info_Num_Text[0].setFontOnSurface("Начальная скорость: " + std::to_string(udar[count].get_start_velocity()));
+				info_Num_Text[1].setFontOnSurface("Конечная глубина: " + std::to_string(udar[count].get_end_depth()));
+				info_Num_Text[3].setFontOnSurface("Текущая скорость: " + std::to_string(udar[count].get_current_velocity()));
+				info_Num_Text[2].setFontOnSurface("Текущая глубина: " + std::to_string(udar[count].get_current_depth_y()));
+				SDL_RenderSetViewport(gRenderer, &rect_info_Num); // Область для отображения текста
+				for (int i = 0; i < NUMB_TEXT; i++)
+					info_Num_Text[i].TransferToRenderFont(10,  2*i * FONT_SIZE);
 				
 				SDL_RenderSetViewport(gRenderer ,  &rect_PDSK); // Область для отображения Только область ударника и прочее
 				motion_udar.display_PDSK(); // Отобразить систему координат
@@ -267,12 +316,24 @@ int main(int argc ,  char* args[])
 				motion_udar.display_info_PDSK();
 				motion_udar.display_info_PSDK_V_and_L(&udar[count]);
 
+
 				SDL_RenderPresent(gRenderer);
+				SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 0);
+				SDL_RenderClear(gRenderer);
+
+
+				if (udar[count].get_current_velocity() == 0)
+				{
+					motion = false;
+					SDL_RenderSetViewport(gRenderer, &rect_PDSK); // Область для отображения 
+					motion_udar.display_motion_klin(&udar[count]);
+					cout << endl << "Конечная глубина проникания ударника: " << udar[count].get_end_depth() << "м" << endl;
+					break;
+				}
 			}
 
 		}
-
-		
+	
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	close();

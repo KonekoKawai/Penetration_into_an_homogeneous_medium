@@ -2,17 +2,17 @@
 
 Work_With_Texture::Work_With_Texture()
 {
-	center_flip_x ,  center_flip_y ,  angel_Flip = NULL;
+	center_flip_x = NULL,  center_flip_y = NULL,  angel_Flip = NULL;
 
 	mTexture = NULL;
 
 	alphaTransparency = 255;
 
-	width_Texture ,  height_Texture = NULL;
+	width_Texture = NULL,  height_Texture = NULL;
 
-	width_Smash ,  height_Smash = NULL;
+	width_Smash = NULL,  height_Smash = NULL;
 	
-	splits_count ,  steps_Width ,  steps_Height = NULL;
+	splits_count = NULL,  steps_Width = NULL,  steps_Height = NULL;
 }
 Work_With_Texture::~Work_With_Texture()
 {
@@ -24,6 +24,33 @@ Work_With_Texture::~Work_With_Texture()
 	free();
 }
 
+void Work_With_Texture::setFontOnSurface(string str)
+{
+	Uint16* tempSTR = new Uint16[str.length()+1]{};
+	for (int i = 0; i < str.length(); i++)
+	{
+		if (str[i] < 0)
+			tempSTR[i] = str[i] + 1104;
+		else
+			tempSTR[i] = str[i];
+	}
+	setFontOnSurface(tempSTR, FONT_SIZE);
+
+	delete[]tempSTR;
+}
+
+void Work_With_Texture::setFontOnSurface(const Uint16* str, unsigned char font_size)
+{
+	gFont = TTF_OpenFont("Resources/Chava-Regular.ttf", font_size);
+	SDL_Color color = { 0, 0, 0 };
+	//SDL_Color backgorund_color = { 255,255,255 };
+	SDL_Surface* temp = TTF_RenderUNICODE_Solid(gFont,str, color);
+	
+	mTexture = SDL_CreateTextureFromSurface(gRenderer, temp);
+	SDL_QueryTexture(mTexture, NULL, NULL, &width_Texture, &height_Texture); // Получение параметров текстуры
+
+	SDL_FreeSurface(temp);
+}
 
 // Загрузка текстур ОДНОЙ
 void Work_With_Texture::setTexture(string path) // Загрузка ОДНОЙ текстуры без прозрачности ЗАДНЕЙ ЧАСТИ ТЕКСТУРЫ
@@ -31,7 +58,9 @@ void Work_With_Texture::setTexture(string path) // Загрузка ОДНОЙ текстуры без п
 	SDL_Surface* mediaSurface = IMG_Load(path.c_str());
 	mTexture = SDL_CreateTextureFromSurface(gRenderer ,  mediaSurface);
 	SDL_QueryTexture(mTexture ,  NULL ,  NULL ,  &width_Texture ,  &height_Texture); // Получение параметров текстуры
+
 }
+
 void Work_With_Texture::setTexture(string path ,  int R ,  int G ,  int B) // Загрузка ОДНОЙ текстуры с установкой прозрачности ЗАДНЕЙ ЧАСТИ ТЕКСТУРЫ
 {
 	SDL_Surface* mediaSurface = IMG_Load(path.c_str());
@@ -94,11 +123,20 @@ void Work_With_Texture::setTexture(string path ,  int width_Smash ,  int height_
 }
 /////////////////////////////////
 
+
+void Work_With_Texture::TransferToRenderFont(int x,int y) // Отображение текста на рендер
+{
+	
+	SDL_Rect font_rect = { x,y,this->width_Texture,this->height_Texture};
+	SDL_RenderCopy(gRenderer, mTexture, NULL, &font_rect);
+}
+
 // Отображение текстур ОДНОЙ // или НЕСКОЛЬКИХ 
 void Work_With_Texture::TransferToRender(int x ,  int y) // Отображение ОДНОЙ текстуры на рендер
 {
 	SDL_Rect rect = { x , y , SCREEN_WIDTH , SCREEN_HEIGHT }; // Область для показа
 	SDL_Point center = { center_flip_x ,  center_flip_y };
+	
 	SDL_RenderCopyEx(gRenderer ,  mTexture ,  NULL ,  &rect ,  angel_Flip ,  &center ,  SDL_FLIP_NONE);
 }
 void Work_With_Texture::TransferArrayToRender(int x ,  int y ,  int frame) // Отображение из НЕСКОЛЬКИХ текстур на рендер БЕЗ ПРОЧНОСТИ самой текстуры
