@@ -56,6 +56,19 @@ double depth_calculation::velocity_and_depth() // Расчет отношения текущей скоро
 	return current_velocity;
 }
 
+double depth_calculation::velocity_and_depth(double current_depth_y) // ДЛЯ ГРАФИКОВ!!! Расчет отношения текущей скорости к текущей глубине 
+{
+	double  A = (2 * dynamic_hardness * tan(alpha_rad) + 2 * tangent) / mass;
+	double  B = (2 * pow(sin(alpha_rad), 2) * density * tan(alpha_rad)) / mass;
+	double current_velocity = sqrt(-(A / B) + (A / B + pow(start_velocity, 2)) * exp(-B * pow(current_depth_y, 2)));
+	if ((-(A / B) + (A / B + pow(start_velocity, 2)) * exp(-B * pow(current_depth_y, 2))) <= 0.0001)
+	{
+		this->current_velocity = 0;
+		this->current_depth_y = get_end_depth();
+	}
+	return current_velocity;
+}
+
 double depth_calculation::get_end_depth() // Расчет конечной глубины проникания
 {
 	double  A = (2 * dynamic_hardness * tan(alpha_rad) + 2 * tangent) / mass;

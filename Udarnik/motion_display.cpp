@@ -98,10 +98,9 @@ void motion_display::display_motion_klin(depth_calculation* udar) // Метод для о
 	//SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1 , left_h0_intersection_h1, current_y + 1 - h0_in_pixel); // Левая образующая 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 	//  КОнечная точка 
 	SDL_SetRenderDrawColor(gRenderer ,  0 ,  140 ,  0 ,  0);  // цвет
-	end_point = { current_x - THICKHNESS_PIKSEL / 2  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_end_depth() * PIKSEL_IN_ON_M_MOTION) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };// Расположение
+	end_point = { current_x - THICKHNESS_PIKSEL  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_end_depth() * PIKSEL_IN_ON_M_MOTION) , 2* THICKHNESS_PIKSEL , 2* THICKHNESS_PIKSEL };// Расположение
 	SDL_RenderFillRect(gRenderer ,  &end_point);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -174,17 +173,34 @@ void motion_display::display_info_PDSK() // Отрисовка PDSK на окне с информацией
 
 void motion_display::display_info_PSDK_V_and_L(depth_calculation* udar) // Отрисовка зависимости в PDSK на окне с информацеий 
 {
+	//udar->set_current_depth_y(udar[count].get_current_depth_y() + udar[count].get_current_velocity_in_pixel());
+	//udar->set_current_velocity_in_pixel(udar[count].velocity_and_depth() / motion_udar.get_PIKSEL_IN_ON_M_MOTION());
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	SDL_SetRenderDrawColor(gRenderer, 0, 140, 0, 0); // Точка конца пути - цвет
 	//  КОнечная точка Расположение
-	end_point = { current_x - THICKHNESS_PIKSEL / 2  , SCREEN_HEIGHT_MOTION / 4 + (int)(udar->get_end_depth() * PIKSEL_IN_ON_M_MOTION) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
+	end_point = { WIDTH_INDENT + (int)(udar->get_end_depth() * PIKSEL_IN_ON_M_INFO_L)  ,SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_INDENT - (int)(2*THICKHNESS_PIKSEL / 2) , 2*THICKHNESS_PIKSEL ,  2*THICKHNESS_PIKSEL};
 	SDL_RenderFillRect(gRenderer, &end_point);
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Начальная точка расположение
-	current_point = { WIDTH_INDENT+(int)(udar->get_current_depth_y() * PIKSEL_IN_ON_M_INFO_L)  ,SCREEN_HEIGHT_INFO/4*3 - HEIGHT_INDENT - (int)(udar->get_current_velocity() * PIKSEL_IN_ON_M_INFO_V) ,  4 ,  4};
-	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0); // Точка начала - цвет
-	SDL_RenderFillRect(gRenderer, &current_point);
+	// Отрисовка графика
+	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+	for (double current_depth = 0, current_velocity; current_depth <= udar->get_current_depth_y(); current_depth += 0.002)
+	{
+		current_velocity = udar->velocity_and_depth(current_depth);
+		current_point = { WIDTH_INDENT + (int)(current_depth * PIKSEL_IN_ON_M_INFO_L) + THICKHNESS_PIKSEL / 2 ,SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_INDENT - (int)(current_velocity * PIKSEL_IN_ON_M_INFO_V + THICKHNESS_PIKSEL/2) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
+		SDL_RenderFillRect(gRenderer, &current_point);
+	}
+
+	// Отрисовка линии перпендикулярной горизонту (Ox) СИЛЬНО ВЛИЯЕТ НА ПРОИЗВОДИТЕЛЬНОСТЬ!!!
+	//current_point = { WIDTH_INDENT + (int)(current_depth * PIKSEL_IN_ON_M_INFO_L)  ,SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_INDENT - (int)(udar->get_current_velocity() * PIKSEL_IN_ON_M_INFO_V + THICKHNESS_PIKSEL / 2) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
+	//SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0); // Точка начала - цвет
+	//SDL_RenderFillRect(gRenderer, &current_point);
+
+	// Отрисовка одной точки
+	//current_point = { WIDTH_INDENT+(int)(udar->get_current_depth_y() * PIKSEL_IN_ON_M_INFO_L)  ,SCREEN_HEIGHT_INFO/4*3 - HEIGHT_INDENT - (int)(udar->get_current_velocity() * PIKSEL_IN_ON_M_INFO_V+ THICKHNESS_PIKSEL/2) ,  THICKHNESS_PIKSEL ,  THICKHNESS_PIKSEL };
+	//SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0); // Точка начала - цвет
+	//SDL_RenderFillRect(gRenderer, &current_point);
 }
 
 void motion_display::display_motion_point(depth_calculation* udar) // Метод для отображения движения точки

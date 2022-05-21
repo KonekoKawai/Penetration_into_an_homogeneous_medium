@@ -11,30 +11,29 @@
 #include "Texture.h"
 #include "motion_display.h"
 
-const int SCREEN_WIDTH = 1100; // Ширина экрана
-const int SCREEN_HEIGHT = 900; // Высота экрана
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+// ПО УМОЛЧАНИЮ Но меняется далее
+SDL_DisplayMode info_Display_Options;
+
+const int SCREEN_WIDTH = 1200; // Ширина экрана
+const int SCREEN_HEIGHT = 700; // Высота экрана
 
 const int SCREEN_WIDTH_MOTION = SCREEN_WIDTH/4*3; // Ширина экрана для отображения ударника
 const int SCREEN_HEIGHT_MOTION = SCREEN_HEIGHT; // Высота экрана для отображения ударника
 
-const int SCREEN_WIDTH_INFO = SCREEN_WIDTH / 4;  
+const int SCREEN_WIDTH_INFO = SCREEN_WIDTH / 4;
 const int SCREEN_HEIGHT_INFO = SCREEN_HEIGHT;
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const int THICKHNESS_PIKSEL = 6; // Ширина точки в пикселях
+const int THICKHNESS_PIKSEL = 3; // Ширина точки в пикселях
 
-#define Test
-
-
-#ifdef Test
-const int ARRAY_SIZE = 5; // Количество ударников для просмотра
-#endif
+const int NUMB_TEXT = 8; // Количество окон с текстом
+const int FONT_SIZE = 14;// Размер шрифта
 
 using std::cout;
 using std::cin;
 using std::endl;
 
-const int NUMB_TEXT = 4; // Количество окон с текстом
-const int FONT_SIZE = 14;// Размер шрифта
 
 SDL_Window* gWindow = NULL; // Глобальное окно для всего
 SDL_Surface* gScreenSurface = NULL; // Глобальная поверхность для глобального окна 
@@ -48,3 +47,9 @@ SDL_Rect rect_info_PDSK = { SCREEN_WIDTH / 4 * 3 , SCREEN_HEIGHT / 4 , SCREEN_WI
 void init();  // Функция инициализация окна 
 void close();  // Инициализация выхода 
 bool enter(depth_calculation* udar); // Функция ввода параметров
+
+#define Test
+
+#ifdef Test
+const int ARRAY_SIZE = 5; // Количество ударников для просмотра
+#endif

@@ -10,6 +10,8 @@ public:
 	depth_calculation(double  mass ,  double  start_velocity ,  double  alpha_rad ,  double  density ,  double  tangent ,  double  dynamic_hardness, double h0, double h1);
 
 	double velocity_and_depth(); // Расчет отношения текущей скорости к текущей глубине
+	double velocity_and_depth(double current_depth_y); // Для графиков 
+
 	double get_end_depth(); // Расчет конечной глубины 
 	unsigned int get_ARRAY_SIZE();
 	void reset_udar(); // Обнуление данных ударника

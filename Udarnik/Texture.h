@@ -12,6 +12,7 @@ using std::string;
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
+
 extern const int FONT_SIZE;
 
 extern SDL_Window* gWindow; // Глобальное окно для всего
