@@ -33,9 +33,8 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-const int NUMB_TEXT = 4;
+const int NUMB_TEXT = 4; // Количество окон с текстом
 const int FONT_SIZE = 14;// Размер шрифта
-TTF_Font* gFont = NULL; // Загрузка шрифта
 
 SDL_Window* gWindow = NULL; // Глобальное окно для всего
 SDL_Surface* gScreenSurface = NULL; // Глобальная поверхность для глобального окна 

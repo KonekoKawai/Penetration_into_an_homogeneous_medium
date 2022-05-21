@@ -13,6 +13,8 @@ Work_With_Texture::Work_With_Texture()
 	width_Smash = NULL,  height_Smash = NULL;
 	
 	splits_count = NULL,  steps_Width = NULL,  steps_Height = NULL;
+
+	Font = TTF_OpenFont("Resources/Chava-Regular.ttf", FONT_SIZE); // Открываем шрифты по умолчанию
 }
 Work_With_Texture::~Work_With_Texture()
 {
@@ -34,17 +36,15 @@ void Work_With_Texture::setFontOnSurface(string str)
 		else
 			tempSTR[i] = str[i];
 	}
-	setFontOnSurface(tempSTR, FONT_SIZE);
-
+	setFontOnSurfaceUNICODE(tempSTR);
 	delete[]tempSTR;
 }
 
-void Work_With_Texture::setFontOnSurface(const Uint16* str, unsigned char font_size)
+void Work_With_Texture::setFontOnSurfaceUNICODE(const Uint16* str)
 {
-	gFont = TTF_OpenFont("Resources/Chava-Regular.ttf", font_size);
 	SDL_Color color = { 0, 0, 0 };
 	//SDL_Color backgorund_color = { 255,255,255 };
-	SDL_Surface* temp = TTF_RenderUNICODE_Solid(gFont,str, color);
+	SDL_Surface* temp = TTF_RenderUNICODE_Solid(Font,str, color);
 	
 	mTexture = SDL_CreateTextureFromSurface(gRenderer, temp);
 	SDL_QueryTexture(mTexture, NULL, NULL, &width_Texture, &height_Texture); // Получение параметров текстуры
@@ -126,9 +126,9 @@ void Work_With_Texture::setTexture(string path ,  int width_Smash ,  int height_
 
 void Work_With_Texture::TransferToRenderFont(int x,int y) // Отображение текста на рендер
 {
-	
 	SDL_Rect font_rect = { x,y,this->width_Texture,this->height_Texture};
 	SDL_RenderCopy(gRenderer, mTexture, NULL, &font_rect);
+	SDL_DestroyTexture(mTexture);
 }
 
 // Отображение текстур ОДНОЙ // или НЕСКОЛЬКИХ 

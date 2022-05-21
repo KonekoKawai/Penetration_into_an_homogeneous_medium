@@ -79,25 +79,24 @@ void motion_display::display_motion_klin(depth_calculation* udar) // Метод для о
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Удаляем предыдующие линии 
 	//SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255); // Образующуие клина для удаления - цвет
-
+	// 
 	//// ОСНОВНАЯ часть ударника
 	//SDL_RenderDrawLine(gRenderer, right_h0_intersection_h1, current_y - h0_in_pixel, right_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Правая основная часть ударника 
 	//SDL_RenderDrawLine(gRenderer, left_h0_intersection_h1, current_y - h0_in_pixel, left_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Левая основная часть ударника 
 	//SDL_RenderDrawLine(gRenderer, right_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel, left_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Верхняя часть ударника
-
-
+	//
+	//
 	//// ОБРАЗУЮЩИЕ 
 	////Удаляем 3 линии Которые рисуем далее // По сути первый вызов ничего не удаляет
 	//SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y - 1, right_h0_intersection_h1, current_y -1 - h0_in_pixel); // Правая образующая 
 	//SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y, right_h0_intersection_h1, current_y - h0_in_pixel); // Правая образующая 
 	//SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1, right_h0_intersection_h1, current_y + 1 - h0_in_pixel); // Правая образующая 
-
+	//
 	////Удаляем 3 линии Которые рисуем далее // По сути первый вызов ничего не удаляет
 	//SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y -1 , left_h0_intersection_h1, current_y -1 - h0_in_pixel); // Левая образующая 
 	//SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y, left_h0_intersection_h1, current_y - h0_in_pixel); // Левая образующая 
 	//SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1 , left_h0_intersection_h1, current_y + 1 - h0_in_pixel); // Левая образующая 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
 	//  КОнечная точка 
@@ -134,8 +133,8 @@ void motion_display::display_motion_klin(depth_calculation* udar) // Метод для о
 	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y + 1, left_h0_intersection_h1, current_y + 1- h0_in_pixel); // Левая образующая 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	SDL_SetRenderDrawColor(gRenderer ,  0 ,  0 ,  0 ,  0);
-	SDL_RenderDrawRect(gRenderer ,  &rect_PDSK); // Подрисовываем рамки
+	//SDL_SetRenderDrawColor(gRenderer ,  0 ,  0 ,  0 ,  0);
+	//SDL_RenderDrawRect(gRenderer ,  &rect_PDSK); // Подрисовываем рамки
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 

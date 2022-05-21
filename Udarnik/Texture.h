@@ -14,8 +14,6 @@ extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 extern const int FONT_SIZE;
 
-extern TTF_Font* gFont;
-
 extern SDL_Window* gWindow; // Глобальное окно для всего
 extern SDL_Surface* gScreenSurface; // Глобальная поверхность для глобального окна 
 extern SDL_Renderer* gRenderer; // Отображает состояние рендеринга Помогает рендерить текстуры на экран
@@ -35,13 +33,11 @@ public:
     Work_With_Texture();
     ~Work_With_Texture();
 
-   
-
     void loadTexture(string path);
     void loadTexture(string path ,  int R ,  int G ,  int B);
 
-    void setFontOnSurface(string str);
-    void setFontOnSurface(const Uint16* str, unsigned char font_size);
+    void setFontOnSurface(string str); // Загрузка текста Через обычный ввод
+    void setFontOnSurfaceUNICODE(const Uint16* str); // Загрузка текста Если есть строка UNICODE
     void setTexture(string path); // Загрузка ОДНОЙ текстуры без прозрачности ЗАДНЕЙ ЧАСТИ ТЕКСТУРЫ
     void setTexture(string path ,  int R ,  int G ,  int B); // Загрузка ОДНОЙ текстуры с установкой прозрачносии ЗАДНЕЙ ЧАСТИ ТЕКСТУРЫ
     void setTexture(string path ,  int width_Smash ,  int height_Smash); // Загрузка НЕСКОЛЬКИХ текстур из одной / разбиения поверхности на частицы БЕЗ ПРОЗРАЧНОСТИ ЗАДНЕЙ ЧАСТИ ТЕКСТУРЫ
@@ -76,6 +72,5 @@ private:
     int width_Smash;
     int height_Smash;
 
-    string textSTR; // Текст объекта в char
-    Uint16* textUNICODE; // Текст объекта в UNICODE
+    TTF_Font* Font; // Шрифт 
 };

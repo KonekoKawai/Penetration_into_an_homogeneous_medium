@@ -294,6 +294,7 @@ int main(int argc ,  char* args[])
 			
 			while (true)
 			{			
+			
 				display();
 				udar[count].set_current_depth_y(udar[count].get_current_depth_y() + udar[count].get_current_velocity_in_pixel());
 				udar[count].set_current_velocity_in_pixel(udar[count].velocity_and_depth() / motion_udar.get_PIKSEL_IN_ON_M_MOTION());
