@@ -12,7 +12,7 @@
 #include "motion_display.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-// ПО УМОЛЧАНИЮ Но меняется далее
+// ПО УМОЛЧАНИЮ Но меняется далее Или нет?
 SDL_DisplayMode info_Display_Options;
 
 const int SCREEN_WIDTH = 1200; // Ширина экрана
@@ -27,7 +27,8 @@ const int SCREEN_HEIGHT_INFO = SCREEN_HEIGHT;
 
 const int THICKHNESS_PIKSEL = 3; // Ширина точки в пикселях
 
-const int NUMB_TEXT = 8; // Количество окон с текстом
+const int NUMB_TEXT_INFO = 11; // Количество окон с текстом в окне с информацией
+const int NUMB_TEXT = 4;
 const int FONT_SIZE = 14;// Размер шрифта
 
 using std::cout;

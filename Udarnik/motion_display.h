@@ -8,6 +8,7 @@
 #include <mutex>
 
 #include "depth_calculation.h"
+#include "Texture.h"
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
@@ -37,13 +38,15 @@ public:
 	motion_display();
 	~motion_display();
 
-	void display_PDSK(); // Отображает систему координат на 3/4 экрана слева
-	
+	void display_PDSK(Work_With_Texture* numbers); // Отображает систему координат на 3/4 экрана слева
+
+	void display_info_PDSK(Work_With_Texture* numbers); // Отобразить в окне информации PDSK 
+	void display_info_PSDK_V_and_L(depth_calculation* udar); // Отобразить в окне информации Изменение 
+
 	int get_current_y();
 	void display_motion_point(depth_calculation* udar); // Отобразить движение точки
 	void display_motion_klin(depth_calculation* udar); // Отобразить движение клина
-	void display_info_PDSK(); // Отобразить в окне информации PDSK 
-	void display_info_PSDK_V_and_L(depth_calculation* udar); // Отобразить в окне информации Изменение 
+	
 	int get_PIKSEL_IN_ON_M_MOTION();
 	void scaling_PDSK(depth_calculation *udar); // Изменяет масштаб PDSK 
 private:

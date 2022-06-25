@@ -18,6 +18,8 @@ motion_display::motion_display()
 
 	left_h0_intersection_h1 = 100;
 	right_h0_intersection_h1 = 100;
+
+	
 }
 
 motion_display::~motion_display()
@@ -25,9 +27,8 @@ motion_display::~motion_display()
 	
 }
 
-void motion_display::display_PDSK() // Отображение ПДСК на главном экране
+void motion_display::display_PDSK(Work_With_Texture* numbers) // Отображение ПДСК на главном экране
 {
-
 	SDL_SetRenderDrawColor(gRenderer ,  0 ,  0 ,  128 ,  0);
 	SDL_RenderDrawLine(gRenderer ,  SCREEN_WIDTH_MOTION/2 ,  0 ,  SCREEN_WIDTH_MOTION / 2 ,  SCREEN_HEIGHT); // Ось Y
 	SDL_RenderDrawLine(gRenderer ,  0 ,  SCREEN_HEIGHT / 4 ,  SCREEN_WIDTH_MOTION ,  SCREEN_HEIGHT / 4); // Ось X
@@ -37,18 +38,73 @@ void motion_display::display_PDSK() // Отображение ПДСК на главном экране
 	for (int i = SCREEN_WIDTH_MOTION/2; i < SCREEN_WIDTH_MOTION; i += PIKSEL_IN_ON_M_MOTION/4) // Черточки по линии X -> PIKSEL_IN_ON_M_MOTION/4 т.к Делим на 4 один метр
 	{
 	
-		if(count % 4 == 0) // Каждые 0.25 Ставим большой прочерк
-		SDL_RenderDrawLine(gRenderer ,  i ,  (SCREEN_HEIGHT / 4) + (SCREEN_HEIGHT_MOTION / 50) ,  i ,  (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50)); // Каждый метр
+		if (count % 4 == 0) // Каждые 1 Ставим большой прочерк
+		{
+			SDL_RenderDrawLine(gRenderer, i, (SCREEN_HEIGHT / 4) + (SCREEN_HEIGHT_MOTION / 50), i, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50)); // Каждый метр
+			if (count < 40)
+				numbers->TransferArrayToRender(i - 6, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 21, count / 4);
+			if (count > 40 && (count / 10) % 10 == 0) // Если начались двузначеные и больше 11 А так же деляться на 10 без остатка
+			{
+				numbers->TransferArrayToRender(i - 12, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 21, count / 40); // Первые
+				numbers->TransferArrayToRender(i - 2, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 21, 0);
+			}
+			else if (count > 40) // Двузчнаные от 11 
+			{
+				numbers->TransferArrayToRender(i - 12, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 21, count / 40); //Первые 
+				numbers->TransferArrayToRender(i - 2, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 21, (count / 4) % 10);
+			}
+			else if (count == 40) // Первое двузначное
+			{
+				numbers->TransferArrayToRender(i - 12, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 21, count / 40); // Первые
+				numbers->TransferArrayToRender(i - 2, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 21, 0);
+			}
+		}
 		count++;
+		// Каждый 0.25
+		if ((PIKSEL_IN_ON_M_MOTION / 4) > 20)
 		SDL_RenderDrawLine(gRenderer ,  i ,  (SCREEN_HEIGHT / 4) + (SCREEN_HEIGHT_MOTION / 100) ,  i ,  (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 100)); // Каждые 0.25
 	}
 	
 	count = 0;
 	for (int i = SCREEN_WIDTH_MOTION/2; i > 0; i -= PIKSEL_IN_ON_M_MOTION / 4) // Черточки по линии X <-
 	{
-		if (count % 4 == 0) // Каждые 0.25 Ставим большой прочерк
-		SDL_RenderDrawLine(gRenderer ,  i ,  (SCREEN_HEIGHT / 4) + (SCREEN_HEIGHT_MOTION / 50) ,  i ,  (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50)); // Каждый метр 
+		if (count % 4 == 0) // Каждые 1 Ставим большой прочерк
+		{
+			SDL_RenderDrawLine(gRenderer, i, (SCREEN_HEIGHT / 4) + (SCREEN_HEIGHT_MOTION / 50), i, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50)); // Каждый метр 
+			if(count!=0 && count < 40)
+				numbers->TransferArrayToRender(i - 13, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 21, 11);
+			if(count < 40)
+				numbers->TransferArrayToRender(i - 3, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 21	, count / 4);
+			if (count > 40 && (count / 10) % 10 == 0) // Если начались двузначеные и больше 11 А так же деляться на 10 без остатка
+			{
+				numbers->TransferArrayToRender(i - 15, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 20, 11);
+				numbers->TransferArrayToRender(i - 7, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 20, count / 40); // Первые
+				numbers->TransferArrayToRender(i +2, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 20, 0);
+			}
+			else if (count > 40) // Двузчнаные от 11 
+			{
+				if ((count / 4) % 10 % 2== 0)
+				{
+					numbers->TransferArrayToRender(i - 15, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 32, 11);
+					numbers->TransferArrayToRender(i - 7, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 32, count / 40); //Первые 
+					numbers->TransferArrayToRender(i + 2, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 32, (count / 4) % 10);
+				}
+				else
+				{
+					numbers->TransferArrayToRender(i - 15, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 20, 11);
+					numbers->TransferArrayToRender(i - 7, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 20, count / 40); //Первые 
+					numbers->TransferArrayToRender(i + 2, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 20, (count / 4) % 10);
+				}
+			}
+			else if (count == 40) // Первое двузначное
+			{
+				numbers->TransferArrayToRender(i - 15, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 32, 11);
+				numbers->TransferArrayToRender(i - 7, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 32, count / 40); // Первые
+				numbers->TransferArrayToRender(i + 2, (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 50) - 32, 0);
+			}
+		}
 		count++;
+		if ((PIKSEL_IN_ON_M_MOTION / 4) > 20)
 		SDL_RenderDrawLine(gRenderer ,  i  ,  (SCREEN_HEIGHT / 4) + (SCREEN_HEIGHT_MOTION / 100) ,  i  ,  (SCREEN_HEIGHT / 4) - (SCREEN_HEIGHT_MOTION / 100)); // Каждые 0.25
 
 	}
@@ -57,17 +113,44 @@ void motion_display::display_PDSK() // Отображение ПДСК на главном экране
 	count = 0;
 	for (int i = SCREEN_HEIGHT_MOTION/4; i > 0; i -= PIKSEL_IN_ON_M_MOTION / 4) // Черточки по линии Y вверх
 	{
-		if (count % 4 == 0) // Каждые 0.25 Ставим большой прочерк
+		if (count % 4 == 0) // Каждые 1 Ставим большой прочерк
 		SDL_RenderDrawLine(gRenderer ,  (SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) ,  i ,  (SCREEN_WIDTH_MOTION / 2) - (SCREEN_WIDTH_MOTION / 50) ,  i);
 		count++;
+		if ((PIKSEL_IN_ON_M_MOTION / 4) > 20)
 		SDL_RenderDrawLine(gRenderer ,  (SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 100) ,  i ,  (SCREEN_WIDTH_MOTION / 2) - (SCREEN_WIDTH_MOTION / 100) ,  i);
 	}
-	count = 0;
-	for (int i = SCREEN_HEIGHT_MOTION / 4; i < SCREEN_HEIGHT_MOTION* PIKSEL_IN_ON_M_MOTION/50; i += PIKSEL_IN_ON_M_MOTION / 4) // Черточки по линии Y вниз
+	count = 0; // SCREEN_HEIGHT_MOTION* PIKSEL_IN_ON_M_MOTION/50
+	for (int i = SCREEN_HEIGHT_MOTION / 4; i < SCREEN_HEIGHT_MOTION; i += PIKSEL_IN_ON_M_MOTION / 4) // Черточки по линии Y вниз
 	{
-		if (count % 4 == 0) // Каждые 0.25 Ставим большой прочерк
-		SDL_RenderDrawLine(gRenderer ,  (SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) ,  i ,  (SCREEN_WIDTH_MOTION / 2) - (SCREEN_WIDTH_MOTION / 50) ,  i);
+		if (count % 4 == 0) // Каждые 1 Ставим большой прочерк
+		{
+			SDL_RenderDrawLine(gRenderer, (SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50), i, (SCREEN_WIDTH_MOTION / 2) - (SCREEN_WIDTH_MOTION / 50), i);
+			if(count!=0 && count < 40)
+				numbers->TransferArrayToRender((SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) + 3, i-10, count / 4);
+			if (count > 40 && (count / 10) % 10==0) // Если начались двузначеные и больше 11 А так же деляться на 10 без остатка
+			{
+				numbers->TransferArrayToRender((SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) + 3, i - 10, count / 40); // Первые
+				numbers->TransferArrayToRender((SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) + 13, i - 10, 0);
+			}
+			else if (count > 40) // Двузчнаные от 11 
+			{
+				numbers->TransferArrayToRender((SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) + 3, i - 10, count / 40); //Первые 
+				numbers->TransferArrayToRender((SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) + 13, i - 10, (count /4 ) % 10);
+			}
+			else if (count == 40) // Первое двузначное
+			{
+				numbers->TransferArrayToRender((SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) + 3, i - 10, count / 40); // Первые
+				numbers->TransferArrayToRender((SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) + 13, i - 10, 0);
+			}
+		}
+		if (count % 2 == 0 && count % 4 != 0 && count < 40 && (PIKSEL_IN_ON_M_MOTION / 4) > 20) // Цифры у маленьких черточек с 0,5
+		{
+			numbers->TransferArrayToRender((SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) + 10, i - 10, 10);
+			numbers->TransferArrayToRender((SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) + 17, i - 10, 5);
+			numbers->TransferArrayToRender((SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 50) + 3, i - 10, count / 4);
+		}
 		count++;
+		if ((PIKSEL_IN_ON_M_MOTION / 4) > 20)
 		SDL_RenderDrawLine(gRenderer ,  (SCREEN_WIDTH_MOTION / 2) + (SCREEN_WIDTH_MOTION / 100) ,  i ,  (SCREEN_WIDTH_MOTION / 2) - (SCREEN_WIDTH_MOTION / 100) ,  i);
 	}
 	
@@ -117,10 +200,19 @@ void motion_display::display_motion_klin(depth_calculation* udar) // Метод для о
 	SDL_SetRenderDrawColor(gRenderer ,  0 ,  0 ,  0 ,  0); //клин - цвет
 
 	// ОСНОВНАЯ часть ударника
+
+	// Без закраски
 	SDL_RenderDrawLine(gRenderer, right_h0_intersection_h1, current_y - h0_in_pixel, right_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Правая основная часть ударника 
 	SDL_RenderDrawLine(gRenderer, left_h0_intersection_h1, current_y - h0_in_pixel, left_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Левая основная часть ударника 
 	SDL_RenderDrawLine(gRenderer, right_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel, left_h0_intersection_h1, current_y - h0_in_pixel - h1_in_pixel); // Верхняя часть ударника
-	// ОБРАЗУЮЩИЕ 
+
+	// Через закраску 
+	SDL_SetRenderDrawColor(gRenderer, 140, 140, 140, 0); //клин - цвет
+	SDL_Rect rect_core = { left_h0_intersection_h1+1 , current_y - h0_in_pixel - h1_in_pixel+1 , abs(left_h0_intersection_h1 - right_h0_intersection_h1) -1 ,  h1_in_pixel -1 };
+	SDL_RenderFillRect(gRenderer, &rect_core);
+						
+	
+	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0); //клин - цвет// ОБРАЗУЮЩИЕ 
 	// Рисуем 3 линии Чтобы границы были более толстыми 
 	SDL_RenderDrawLine(gRenderer ,  SCREEN_WIDTH_MOTION / 2 ,   current_y -1, right_h0_intersection_h1,  current_y -1  - h0_in_pixel); // Правая образующая 
 	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH_MOTION / 2, current_y, right_h0_intersection_h1, current_y - h0_in_pixel); // Правая образующая 
@@ -143,7 +235,7 @@ int motion_display::get_current_y()
 	return current_y;
 }
 
-void motion_display::display_info_PDSK() // Отрисовка PDSK на окне с информацией 
+void motion_display::display_info_PDSK(Work_With_Texture* numbers) // Отрисовка PDSK на окне с информацией 
 {
 	SDL_SetRenderDrawColor(gRenderer ,  0 , 0 ,  0 ,  0);
 	SDL_RenderDrawLine(gRenderer, WIDTH_INDENT, HEIGHT_INDENT, WIDTH_INDENT, SCREEN_HEIGHT_INFO / 4 * 3 - HEIGHT_INDENT); // Ось Y

@@ -5,7 +5,7 @@ Work_With_Texture::Work_With_Texture()
 	center_flip_x = NULL,  center_flip_y = NULL,  angel_Flip = NULL;
 
 	mTexture = NULL;
-
+	
 	alphaTransparency = 255;
 
 	width_Texture = NULL,  height_Texture = NULL;
@@ -14,7 +14,10 @@ Work_With_Texture::Work_With_Texture()
 	
 	splits_count = NULL,  steps_Width = NULL,  steps_Height = NULL;
 
-	Font = TTF_OpenFont("Resources/Chava-Regular.ttf", FONT_SIZE); // Открываем шрифты по умолчанию
+	
+	Font = TTF_OpenFont("Resources/PFAgoraSlabPro Bold.ttf", FONT_SIZE); // Открываем шрифты по умолчанию
+
+	ArrayMediaSurface = IMG_Load("Resources/number_dot_min.png"); // Загрузка картинки на поверхность
 }
 Work_With_Texture::~Work_With_Texture()
 {
@@ -26,13 +29,13 @@ Work_With_Texture::~Work_With_Texture()
 	free();
 }
 
-void Work_With_Texture::setFontOnSurface(string str)
+void Work_With_Texture::setFontOnSurface(string str) //1104
 {
 	Uint16* tempSTR = new Uint16[str.length()+1]{};
 	for (int i = 0; i < str.length(); i++)
 	{
 		if (str[i] < 0)
-			tempSTR[i] = str[i] + 1104;
+			tempSTR[i] = str[i] + 1104 ;
 		else
 			tempSTR[i] = str[i];
 	}
@@ -71,11 +74,11 @@ void Work_With_Texture::setTexture(string path ,  int R ,  int G ,  int B) // За
 // или НЕСКОЛЬКИХ
 void Work_With_Texture::setTexture(string path ,  int width_Smash ,  int height_Smash) // Загрузка НЕСКОЛЬКИХ текстур из одной / разбиения поверхности на частицы БЕЗ ПРОЗРАЧНОСТИ ЗАДНЕЙ ЧАСТИ ТЕКСТУРЫ
 {
-	SDL_Surface* mediaSurface = IMG_Load(path.c_str()); // Загрузка картинки на поверхность
-	mTexture = SDL_CreateTextureFromSurface(gRenderer ,  mediaSurface);// Загрузка общей текстуры
+	//SDL_Surface* mediaSurface = IMG_Load(path.c_str()); // Загрузка картинки на поверхность
+	mTexture = SDL_CreateTextureFromSurface(gRenderer , ArrayMediaSurface);// Загрузка общей текстуры
 
-	width_Texture = mediaSurface->w; // Ширина поверхности И будующей текстуры
-	height_Texture = mediaSurface->h; // Высота поверхности И будующей текстуры
+	width_Texture = ArrayMediaSurface->w; // Ширина поверхности И будующей текстуры
+	height_Texture = ArrayMediaSurface->h; // Высота поверхности И будующей текстуры
 
 	splits_count = width_Smash * height_Smash; // Сумма текстур на одной поверхности
 	steps_Width = width_Texture / width_Smash; // Шаг для перехода по текстуре для обрезки по координате X
@@ -88,7 +91,7 @@ void Work_With_Texture::setTexture(string path ,  int width_Smash ,  int height_
 		for (int x = 0; x < width_Texture - 10; x += steps_Width) // Движение вправо по поверхности
 		{
 			tempRect = { x , y , steps_Width , steps_Height }; // Каждый шаг новое разбиение
-			SDL_BlitScaled(mediaSurface ,  &tempRect ,  gScreenSurface ,  NULL); // Загружаем на временную поверхность участок начальной поверхности 
+			SDL_BlitScaled(ArrayMediaSurface,  &tempRect ,  gScreenSurface ,  NULL); // Загружаем на временную поверхность участок начальной поверхности 
 			array_Smash_Texture[i] = SDL_CreateTextureFromSurface(gRenderer ,  gScreenSurface); // Запихиваем в массив нашу текстуру
 			i++; // i-1 равно количеству текстур
 		}
@@ -144,7 +147,7 @@ void Work_With_Texture::TransferArrayToRender(int x ,  int y ,  int frame) // От
 	//////SDL_SetTextureBlendMode(array_Smash_Texture[frame] ,  SDL_BLENDMODE_BLEND); // Включить режим смешаивания прозрачности
 	SDL_SetTextureAlphaMod(array_Smash_Texture[frame] ,  alphaTransparency); // Установка прозрачности
 
-	SDL_Rect rect = { x  ,  y ,  steps_Width ,  steps_Height }; //Область для показа 
+	SDL_Rect rect = { x  ,  y ,  steps_Width/6 ,  steps_Height/6 }; //Область для показа 
 
 	SDL_Point center = {center_flip_x ,  center_flip_y}; // центр поворота // По умолчанию центр экрана
 	SDL_RenderCopyEx(gRenderer ,  array_Smash_Texture[frame] ,  NULL ,  &rect ,  angel_Flip ,  &center ,  SDL_FLIP_NONE);

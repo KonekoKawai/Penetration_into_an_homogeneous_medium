@@ -9,6 +9,7 @@
 #include <vector>
 
 using std::string;
+using std::cout;
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
@@ -24,7 +25,7 @@ extern SDL_Rect rect_info_Num;
 
 enum Sprite_Frame_Enum
 {
-    SPRITE_FRAME_ALL = 6 , 
+    SPRITE_FRAME_ALL = 12 , 
     SPRITE_FRAME_14 = 14 , 
 };
 
@@ -73,5 +74,6 @@ private:
     int width_Smash;
     int height_Smash;
 
-    TTF_Font* Font; // ״נטפע 
+    TTF_Font* Font; // ״נטפע
+    SDL_Surface* ArrayMediaSurface;
 };
